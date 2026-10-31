@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101018">
+  <title>Gerador de Sensi FF</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 24px 16px;
+      background: #101018; color: #f4f4f8;
+      font: 16px Arial, sans-serif;
+    }
+    main { max-width: 520px; margin: auto; }
+    h1 { color: #a78bfa; margin-bottom: 6px; }
+    p { color: #c5c5d2; line-height: 1.5; }
+    .card {
+      background: #1b1b27; border: 1px solid #333344;
+      border-radius: 16px; padding: 18px; margin: 16px 0;
+    }
+    label { display: block; margin: 14px 0 7px; font-weight: bold; }
+    input, select, button {
+      width: 100%; padding: 13px; border-radius: 10px;
+      font-size: 16px;
+    }
+    input, select {
+      color: white; background: #11111a; border: 1px solid #454557;
+    }
+    button {
+      margin-top: 18px; border: 0; background: #8b5cf6;
+      color: white; font-weight: bold; cursor: pointer;
+    }
+    button.secondary { background: #343445; margin-top: 10px; }
+    .result { display: none; }
+    .stat {
+      display: flex; justify-content: space-between;
+      padding: 9px 0; border-bottom: 1px solid #343445;
+    }
+    .stat:last-child { border-bottom: 0; }
+    .tag { color: #c4b5fd; }
+    .note { font-size: 13px; color: #aaaaba; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>🎯 Gerador de Sensi FF</h1>
+  <p>Gere sugestões para testar no seu celular. Ajuste aos poucos até encontrar a que fica melhor pra você.</p>
+
+  <section class="card">
+    <label for="modelo">Modelo do celular</label>
+    <input id="modelo" placeholder="Ex.: Redmi Note 8">
+
+    <label for="estilo">Estilo de toque</label>
+    <select id="estilo">
+      <option value="suave">Toque suave</option>
+      <option value="equilibrado">Equilibrado</option>
+      <option value="rapido">Mais rápido</option>
+    </select>
+
+    <button onclick="gerar()">Gerar sensibilidade</button>
+  </section>
+
+  <section id="resultado" class="result">
+    <div class="card">
+      <h2 id="titulo"></h2>
+      <h3>Sem DPI</h3>
+      <div id="semDpi"></div>
+    </div>
+    <div class="card">
+      <h3>Com DPI</h3>
+      <div id="comDpi"></div>
+      <p class="note">Ajuste o DPI nas configurações do aparelho somente se souber como voltar ao valor anterior.</p>
+    </div>
+    <button class="secondary" onclick="copiar()">Copiar configurações</button>
+    <p class="note">Sugestão inicial, não é configuração oficial nem garantia de resultado. Teste no campo de treinamento.</p>
+  </section>
+</main>
+
+<script>
+  ```js
+   // @ts-nocheck
+   ```
+  let textoParaCopiar = "";
+
+  function limitar(valor) {
+    return Math.max(0, Math.min(200, Math.round(valor)));
+  }
+
+  function montarValores(base) {
+    return {
+      "Geral": limitar(base),
+      "Ponto Vermelho": limitar(base - 5),
+      "Mira 2x": limitar(base - 15),
+      "Mira 4x": limitar(base - 25),
+      "AWM": limitar(base - 40),
+      "Olhadinha": limitar(base - 10)
+    };
+  }
+
+  function mostrar(id, valores) {
+    document.getElementById(id).innerHTML = Object.entries(valores)
+      .map(([nome, valor]) =>
+        `<div class="stat"><span>${nome}</span><strong>${valor}</strong></div>`
+      ).join("");
+  }
+
+  function gerar() {
+    const modelo = document.getElementById("modelo").value.trim();
+    const estilo = document.getElementById("estilo").value;
+
+    if (!modelo) {
+      alert("Digite o modelo do celular primeiro 🙂");
+      return;
+    }
+
+    const ajuste = { suave: -8, equilibrado: 0, rapido: 8 }[estilo];
+    const semDpi = montarValores(165 + ajuste);
+    const comDpi = montarValores(150 + ajuste);
+    const dpi = estilo === "suave" ? 400 : estilo === "rapido" ? 520 : 460;
+
+    document.getElementById("titulo").textContent = "Sugestão para " + modelo;
+    mostrar("semDpi", semDpi);
+    mostrar("comDpi", comDpi);
+    document.getElementById("resultado").style.display = "block";
+
+    textoParaCopiar =
+      `Free Fire — ${modelo}\\n` +
+      `Estilo: ${estilo}\\n\\nSem DPI:\\n` +
+      Object.entries(semDpi).map(([n, v]) => `${n}: ${v}`).join("\\n") +
+      `\\n\\nCom DPI (${dpi}):\\n` +
+      Object.entries(comDpi).map(([n, v]) => `${n}: ${v}`).join("\\n");
+  }
+
+  async function copiar() {
+    try {
+      await navigator.clipboard.writeText(textoParaCopiar);
+      alert("Configurações copiadas!");
+    } catch {
+      alert("Não deu para copiar automaticamente. Selecione e copie os valores.");
+    }
+  }
+</script>
+</body>
+</html>
+```
