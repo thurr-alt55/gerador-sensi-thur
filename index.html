@@ -114,8 +114,11 @@
     }
 
     const ajuste = { suave: -8, equilibrado: 0, rapido: 8 }[estilo];
-    const semDpi = montarValores(165 + ajuste);
-    const comDpi = montarValores(150 + ajuste);
+    const codigoModelo = [...modelo.toLowerCase()]
+  .reduce((total, letra) => total + letra.charCodeAt(0), 0);
+const variacaoModelo = (codigoModelo % 31) - 15;
+const semDpi = montarValores(165 + ajuste + variacaoModelo);
+    const comDpi = montarValores(150 + ajuste + variacaoModelo);
     const dpi = estilo === "suave" ? 400 : estilo === "rapido" ? 520 : 460;
 
     document.getElementById("titulo").textContent = "Sugestão para " + modelo;
