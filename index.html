@@ -78,9 +78,8 @@
 </main>
 
 <script>
-  ```js
    // @ts-nocheck
-   ```
+ 
   let textoParaCopiar = "";
 
   function limitar(valor) {
@@ -124,12 +123,12 @@
     mostrar("comDpi", comDpi);
     document.getElementById("resultado").style.display = "block";
 
-    textoParaCopiar =
-      `Free Fire — ${modelo}\\n` +
-      `Estilo: ${estilo}\\n\\nSem DPI:\\n` +
-      Object.entries(semDpi).map(([n, v]) => `${n}: ${v}`).join("\\n") +
-      `\\n\\nCom DPI (${dpi}):\\n` +
-      Object.entries(comDpi).map(([n, v]) => `${n}: ${v}`).join("\\n");
+   textoParaCopiar =
+  `Free Fire — ${modelo}\n` +
+  `Estilo: ${estilo}\n\nSem DPI:\n` +
+  Object.entries(semDpi).map(([n, v]) => `${n}: ${v}`).join("\n") +
+  `\n\nCom DPI (${dpi}):\n` +
+  Object.entries(comDpi).map(([n, v]) => `${n}: ${v}`).join("\n");
   }
 
   async function copiar() {
@@ -143,4 +142,3 @@
 </script>
 </body>
 </html>
-```
