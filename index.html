@@ -123,7 +123,7 @@ const semDpi = montarValores(165 + ajuste + variacaoModelo);
 
     document.getElementById("titulo").textContent = "Sugestão para " + modelo;
     mostrar("semDpi", semDpi);
-    mostrar("comDpi", comDpi);
+    mostrar("comDpi", { ...comDpi, "DPI recomendado": dpi });
     document.getElementById("resultado").style.display = "block";
 
    textoParaCopiar =
