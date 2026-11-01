@@ -38,7 +38,6 @@
       padding: 9px 0; border-bottom: 1px solid #343445;
     }
     .stat:last-child { border-bottom: 0; }
-    .tag { color: #c4b5fd; }
     .note { font-size: 13px; color: #aaaaba; }
   </style>
 </head>
@@ -57,12 +56,14 @@
       <option value="equilibrado">Equilibrado</option>
       <option value="rapido">Mais rápido</option>
     </select>
-<label for="tipoSensi">Tipo de sensibilidade</label>
-<select id="tipoSensi">
-  <option value="normal">Sensi normal</option>
-  <option value="baixa">Sensi baixa</option>
-  <option value="alta">Sensi alta</option>
-</select>
+
+    <label for="tipoSensi">Tipo de sensibilidade</label>
+    <select id="tipoSensi">
+      <option value="normal">Sensi normal</option>
+      <option value="baixa">Sensi baixa</option>
+      <option value="alta">Sensi alta</option>
+    </select>
+
     <button onclick="gerar()">Gerar sensibilidade</button>
   </section>
 
@@ -83,8 +84,6 @@
 </main>
 
 <script>
-   // @ts-nocheck
- 
   let textoParaCopiar = "";
 
   function limitar(valor) {
@@ -110,75 +109,50 @@
   }
 
   function gerar() {
-  const modelo = document.getElementById("modelo").value.trim();
-  const estilo = document.getElementById("estilo").value;
-  const tipoSensi = document.getElementById("tipoSensi").value;
+    const modelo = document.getElementById("modelo").value.trim();
+    const estilo = document.getElementById("estilo").value;
+    const tipoSensi = document.getElementById("tipoSensi").value;
 
-  if (!modelo) {
-    alert("Digite o modelo do celular primeiro 🙂");
-    return;
-  }
+    if (!modelo) {
+      alert("Digite o modelo do celular primeiro 🙂");
+      return;
+    }
 
-  const ajusteEstilo = { suave: -8, equilibrado: 0, rapido: 8 }[estilo];
-  const ajusteSensi = { baixa: -15, normal: 0, alta: 15 }[tipoSensi];
-
-  const codigoModelo = [...modelo.toLowerCase()]
-    .reduce((total, letra) => total + letra.charCodeAt(0), 0);
-  const variacaoModelo = (codigoModelo % 31) - 15;
-  const base = 165 + ajusteEstilo + ajusteSensi + variacaoModelo;
-
-  const semDpi = montarValores(base);
-  const comDpi = montarValores(base - 15);
-
-  const dpi = { baixa: 400, normal: 460, alta: 520 }[tipoSensi];
-  const botao = { baixa: 45, normal: 50, alta: 55 }[tipoSensi];
-
-  document.getElementById("titulo").textContent =
-    `Sugestão para ${modelo} — sensi ${tipoSensi}`;
-
-  mostrar("semDpi", {
-    ...semDpi,
-    "Tamanho do botão": `${botao}%`
-  });
-
-  mostrar("comDpi", {
-    ...comDpi,
-    "DPI recomendado": dpi,
-    "Tamanho do botão": `${botao}%`
-  });
-
-  document.getElementById("resultado").style.display = "block";
-
-  textoParaCopiar =
-    `Free Fire — ${modelo}\nEstilo: ${estilo}\nTipo: sensi ${tipoSensi}\n\n` +
-    `Sem DPI:\n` +
-    Object.entries(semDpi).map(([nome, valor]) => `${nome}: ${valor}`).join("\n") +
-    `\nTamanho do botão: ${botao}%\n\nCom DPI (${dpi}):\n` +
-    Object.entries(comDpi).map(([nome, valor]) => `${nome}: ${valor}`).join("\n") +
-    `\nTamanho do botão: ${botao}%`;
-}
-
-    const ajuste = { suave: -8, equilibrado: 0, rapido: 8 }[estilo];
+    const ajusteEstilo = { suave: -8, equilibrado: 0, rapido: 8 }[estilo];
+    const ajusteSensi = { baixa: -15, normal: 0, alta: 15 }[tipoSensi];
     const codigoModelo = [...modelo.toLowerCase()]
-  .reduce((total, letra) => total + letra.charCodeAt(0), 0);
-const variacaoModelo = (codigoModelo % 31) - 15;
-const semDpi = montarValores(165 + ajuste + variacaoModelo);
-    const comDpi = montarValores(150 + ajuste + variacaoModelo);
-    const dpi = estilo === "suave" ? 400 : estilo === "rapido" ? 520 : 460;
+      .reduce((total, letra) => total + letra.charCodeAt(0), 0);
+    const variacaoModelo = (codigoModelo % 31) - 15;
+    const base = 165 + ajusteEstilo + ajusteSensi + variacaoModelo;
 
-    document.getElementById("titulo").textContent = "Sugestão para " + modelo;
-    mostrar("semDpi", semDpi);
-    mostrar("comDpi", comDpi);
-document.getElementById("comDpi").innerHTML +=
-  `<div><span>DPI recomendado</span><strong>${dpi}</strong></div>`;
+    const semDpi = montarValores(base);
+    const comDpi = montarValores(base - 15);
+    const dpi = { baixa: 400, normal: 460, alta: 520 }[tipoSensi];
+    const botao = { baixa: 45, normal: 50, alta: 55 }[tipoSensi];
+
+    document.getElementById("titulo").textContent =
+      `Sugestão para ${modelo} — sensi ${tipoSensi}`;
+
+    mostrar("semDpi", {
+      ...semDpi,
+      "Tamanho do botão": `${botao}%`
+    });
+
+    mostrar("comDpi", {
+      ...comDpi,
+      "DPI recomendado": dpi,
+      "Tamanho do botão": `${botao}%`
+    });
+
     document.getElementById("resultado").style.display = "block";
 
-   textoParaCopiar =
-  `Free Fire — ${modelo}\n` +
-  `Estilo: ${estilo}\n\nSem DPI:\n` +
-  Object.entries(semDpi).map(([n, v]) => `${n}: ${v}`).join("\n") +
-  `\n\nCom DPI (${dpi}):\n` +
-  Object.entries(comDpi).map(([n, v]) => `${n}: ${v}`).join("\n");
+    textoParaCopiar =
+      `Free Fire — ${modelo}\nEstilo: ${estilo}\nTipo: sensi ${tipoSensi}\n\n` +
+      `Sem DPI:\n` +
+      Object.entries(semDpi).map(([nome, valor]) => `${nome}: ${valor}`).join("\n") +
+      `\nTamanho do botão: ${botao}%\n\nCom DPI (${dpi}):\n` +
+      Object.entries(comDpi).map(([nome, valor]) => `${nome}: ${valor}`).join("\n") +
+      `\nTamanho do botão: ${botao}%`;
   }
 
   async function copiar() {
