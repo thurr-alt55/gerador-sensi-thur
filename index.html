@@ -295,3 +295,97 @@
         suave: -8,
         equilibrado: 0,
         rapido: 8
+}[estilo];
+
+      const ajusteTipo = {
+        baixa: -15,
+        normal: 0,
+        alta: 15
+      }[tipo];
+
+      const base = limitar(165 + variacao + ajusteEstilo + ajusteTipo, 100, 200);
+
+      const sensibilidades = {
+        "Geral": base,
+        "Ponto Vermelho": limitar(base - 5, 0, 200),
+        "Mira 2x": limitar(base - 15, 0, 200),
+        "Mira 4x": limitar(base - 25, 0, 200),
+        "AWM": limitar(base - 40, 0, 200),
+        "Olhadinha": limitar(base - 10, 0, 200)
+      };
+
+      const dpi = limitar(
+        420 + variacao * 3 +
+        { suave: -20, equilibrado: 0, rapido: 20 }[estilo] +
+        { baixa: -30, normal: 0, alta: 30 }[tipo],
+        320,
+        600
+      );
+
+      const botao = limitar(
+        50 + Math.round(variacao / 4) +
+        { suave: 3, equilibrado: 0, rapido: -2 }[estilo] +
+        { baixa: -3, normal: 0, alta: 3 }[tipo],
+        40,
+        60
+      );
+
+      document.getElementById("titulo").textContent = `Config para ${modelo}`;
+
+      document.getElementById("sensibilidades").innerHTML =
+        Object.entries(sensibilidades)
+          .map(([nome, valor]) =>
+            `<div class="stat"><span>${nome}</span><strong>${valor}</strong></div>`
+          )
+          .join("");
+
+      document.getElementById("recomendacoes").innerHTML =
+        `<div class="stat"><span>DPI sugerida</span><strong>${dpi}</strong></div>
+         <div class="stat"><span>Botão de disparo</span><strong>${botao}%</strong></div>`;
+
+      document.getElementById("resultado").style.display = "block";
+
+      textoParaCopiar =
+        `SW Thur Sensi — ${modelo}\n` +
+        Object.entries(sensibilidades)
+          .map(([nome, valor]) => `${nome}: ${valor}`)
+          .join("\n") +
+        `\nDPI sugerida: ${dpi}\nBotão de disparo: ${botao}%`;
+
+      document.getElementById("resultado").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+
+    async function copiar() {
+      if (!textoParaCopiar) {
+        alert("Gere uma configuração antes de copiar 🙂");
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(textoParaCopiar);
+        alert("Configuração copiada!");
+      } catch (erro) {
+        const campo = document.createElement("textarea");
+        campo.value = textoParaCopiar;
+        campo.style.position = "fixed";
+        campo.style.opacity = "0";
+        document.body.appendChild(campo);
+        campo.select();
+
+        const copiou = document.execCommand("copy");
+        campo.remove();
+
+        alert(copiou
+          ? "Configuração copiada!"
+          : "Não foi possível copiar. Selecione e copie o resultado manualmente.");
+      }
+    }
+
+    document.getElementById("gerarBtn").addEventListener("click", gerar);
+    document.getElementById("copiarBtn").addEventListener("click", copiar);
+  </script>
+</body>
+</html>
