@@ -266,4 +266,103 @@
 
         <div id="sensibilidades"></div>
 
-        <div class="recommendations" id: 
+        <div class="recommendations" id="recomendacoes"></div>
+
+        <p class="note">
+          Valores sugeridos para começar. Teste no treino e ajuste ao seu toque.
+          O nome do celular cria apenas uma variação — não mede as características
+          reais do aparelho.
+        </p>
+
+        <button class="secondary" type="button" onclick="copiar()">
+          COPIAR CONFIGURAÇÃO
+        </button>
+      </div>
+    </section>
+
+    <footer class="footer">SW • FEITO NO SEU RITMO</footer>
+  </main>
+
+  <script>
+    let textoCopiado = "";
+
+    function limitar(valor, minimo, maximo) {
+      return Math.max(minimo, Math.min(maximo, Math.round(valor)));
+    }
+
+    function gerar() {
+      const modelo = document.getElementById("modelo").value.trim();
+      const estilo = document.getElementById("estilo").value;
+      const tipo = document.getElementById("tipoSensi").value;
+
+      if (!modelo) {
+        alert("Digite o modelo do celular primeiro 🙂");
+        document.getElementById("modelo").focus();
+        return;
+      }
+
+      const variacaoModelo = [...modelo.toLowerCase()]
+        .reduce((soma, letra) => soma + letra.charCodeAt(0), 0) % 21 - 10;
+
+      const ajusteEstilo = { suave: -8, equilibrado: 0, rapido: 8 }[estilo];
+      const ajusteTipo = { baixa: -15, normal: 0, alta: 15 }[tipo];
+
+      const base = limitar(165 + variacaoModelo + ajusteEstilo + ajusteTipo, 100, 200);
+      const sensis = {
+        "Geral": base,
+        "Ponto Vermelho": limitar(base - 5, 0, 200),
+        "Mira 2x": limitar(base - 15, 0, 200),
+        "Mira 4x": limitar(base - 25, 0, 200),
+        "AWM": limitar(base - 40, 0, 200),
+        "Olhadinha": limitar(base - 10, 0, 200)
+      };
+
+      const dpi = limitar(
+        420 + variacaoModelo * 3 +
+        { suave: -20, equilibrado: 0, rapido: 20 }[estilo] +
+        { baixa: -30, normal: 0, alta: 30 }[tipo],
+        320, 600
+      );
+
+      const botao = limitar(
+        50 + Math.round(variacaoModelo / 4) +
+        { suave: 3, equilibrado: 0, rapido: -2 }[estilo] +
+        { baixa: -3, normal: 0, alta: 3 }[tipo],
+        40, 60
+      );
+
+      document.getElementById("titulo").textContent = `Config para ${modelo}`;
+
+      document.getElementById("sensibilidades").innerHTML =
+        Object.entries(sensis).map(([nome, valor]) =>
+          `<div class="stat"><span>${nome}</span><strong>${valor}</strong></div>`
+        ).join("");
+
+      document.getElementById("recomendacoes").innerHTML =
+        `<div class="stat"><span>DPI recomendada</span><strong>${dpi}</strong></div>
+         <div class="stat"><span>Botão de disparo</span><strong>${botao}%</strong></div>`;
+
+      document.getElementById("resultado").style.display = "block";
+
+      textoCopiado =
+        `SW Thur Sensi — ${modelo}\n` +
+        Object.entries(sensis).map(([nome, valor]) => `${nome}: ${valor}`).join("\n") +
+        `\nDPI recomendada: ${dpi}\nBotão de disparo: ${botao}%`;
+    }
+
+    async function copiar() {
+      if (!textoCopiado) {
+        alert("Gere uma configuração antes de copiar 🙂");
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(textoCopiado);
+        alert("Configuração copiada!");
+      } catch {
+        alert("Não foi possível copiar automaticamente neste navegador.");
+      }
+    }
+  </script>
+</body>
+</html>
