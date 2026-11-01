@@ -3,294 +3,267 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#101018">
+  <meta name="theme-color" content="#090b12">
   <title>SW Thur Sensibilidades</title>
 
   <style>
-    * {
-      box-sizing: border-box;
+    :root {
+      --bg: #090b12;
+      --card: rgba(19, 23, 36, .92);
+      --line: rgba(151, 126, 255, .22);
+      --purple: #9b6cff;
+      --cyan: #4de8e2;
+      --text: #f4f2ff;
+      --muted: #a6a8ba;
     }
+
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      padding: 24px 16px;
-      background: #101018;
-      color: #f4f4f8;
-      font: 16px Arial, sans-serif;
+      min-height: 100vh;
+      padding: 28px 16px 40px;
+      color: var(--text);
+      font: 16px/1.5 system-ui, Arial, sans-serif;
+      background:
+        radial-gradient(ellipse at 15% 0%, rgba(111, 66, 193, .24), transparent 38%),
+        radial-gradient(ellipse at 100% 45%, rgba(34, 186, 190, .10), transparent 34%),
+        var(--bg);
     }
 
-    main {
-      max-width: 520px;
-      margin: auto;
+    main { max-width: 560px; margin: auto; }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      margin: 6px 0 24px;
+    }
+
+    .logo {
+      width: 52px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      border: 1px solid rgba(77, 232, 226, .55);
+      border-radius: 16px;
+      color: var(--cyan);
+      font-weight: 900;
+      letter-spacing: 1px;
+      background: linear-gradient(145deg, #1d2340, #10131e);
+      box-shadow: 0 0 24px rgba(77, 232, 226, .14);
+    }
+
+    .eyebrow {
+      margin: 0 0 2px;
+      color: var(--cyan);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2.2px;
     }
 
     h1 {
-      color: #a78bfa;
-      margin-bottom: 6px;
+      margin: 0;
+      font-size: clamp(23px, 7vw, 32px);
+      line-height: 1.1;
+      letter-spacing: -.7px;
     }
 
-    h2, h3 {
-      margin-top: 0;
-    }
-
-    p {
-      color: #c5c5d2;
-      line-height: 1.5;
+    .intro {
+      margin: 0 0 20px;
+      color: var(--muted);
     }
 
     .card {
-      background: #1b1b27;
-      border: 1px solid #333344;
-      border-radius: 16px;
-      padding: 18px;
       margin: 16px 0;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--card);
+      box-shadow: 0 16px 45px rgba(0, 0, 0, .22);
+      backdrop-filter: blur(12px);
+    }
+
+    .section-title {
+      margin: 0 0 3px;
+      font-size: 18px;
+    }
+
+    .section-hint {
+      margin: 0 0 15px;
+      color: var(--muted);
+      font-size: 13px;
     }
 
     label {
       display: block;
-      margin: 14px 0 7px;
-      font-weight: bold;
+      margin: 15px 0 7px;
+      color: #e5e1f6;
+      font-size: 13px;
+      font-weight: 700;
     }
 
     input, select, button {
       width: 100%;
-      padding: 13px;
-      border-radius: 10px;
-      font-size: 16px;
+      min-height: 50px;
+      padding: 13px 14px;
+      border-radius: 12px;
+      font: inherit;
     }
 
     input, select {
-      color: white;
-      background: #11111a;
-      border: 1px solid #454557;
+      color: var(--text);
+      border: 1px solid #34394e;
+      outline: none;
+      background: #0d1019;
     }
+
+    input:focus, select:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px rgba(77, 232, 226, .1);
+    }
+
+    input::placeholder { color: #777b8e; }
 
     button {
-      margin-top: 18px;
+      margin-top: 20px;
       border: 0;
-      background: #8b5cf6;
-      color: white;
-      font-weight: bold;
+      color: #100c1b;
+      font-weight: 900;
+      letter-spacing: .5px;
       cursor: pointer;
+      background: linear-gradient(100deg, var(--cyan), #9b8aff 85%);
+      box-shadow: 0 8px 25px rgba(111, 111, 255, .25);
+      transition: transform .15s ease, filter .15s ease;
     }
 
-    button:hover {
-      background: #7c3aed;
+    button:hover { filter: brightness(1.08); transform: translateY(-1px); }
+    button:active { transform: translateY(1px); }
+
+    .result { display: none; }
+
+    .result-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
     }
 
-    button.secondary {
-      background: #343445;
-      margin-top: 10px;
+    .result-heading h2 {
+      margin: 0;
+      font-size: 20px;
+      overflow-wrap: anywhere;
     }
 
-    .result {
-      display: none;
+    .badge {
+      flex: 0 0 auto;
+      padding: 5px 9px;
+      border: 1px solid rgba(77, 232, 226, .3);
+      border-radius: 999px;
+      color: var(--cyan);
+      background: rgba(77, 232, 226, .08);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .8px;
     }
 
     .stat {
       display: flex;
       justify-content: space-between;
       gap: 12px;
-      padding: 9px 0;
-      border-bottom: 1px solid #343445;
+      padding: 11px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, .07);
     }
 
-    .stat:last-child {
-      border-bottom: 0;
+    .stat span { color: #c5c7d6; }
+    .stat strong { color: var(--cyan); text-align: right; }
+    .stat:last-child { border-bottom: 0; }
+
+    .recommendations {
+      margin-top: 16px;
+      padding: 4px 14px;
+      border: 1px solid rgba(77, 232, 226, .18);
+      border-radius: 14px;
+      background: rgba(77, 232, 226, .035);
     }
 
     .note {
-      font-size: 13px;
-      color: #aaaaba;
+      margin: 14px 2px 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .secondary {
+      margin-top: 12px;
+      color: var(--text);
+      border: 1px solid #3c4158;
+      background: #191d2b;
+      box-shadow: none;
+    }
+
+    .footer {
+      margin-top: 24px;
+      color: #74788b;
+      text-align: center;
+      font-size: 11px;
+      letter-spacing: .5px;
+    }
+
+    @media (max-width: 380px) {
+      .card { padding: 16px; }
+      .result-heading { flex-direction: column; }
     }
   </style>
 </head>
 
 <body>
   <main>
-    <h1>🎯 SW Thur Sensibilidades</h1>
-    <p>
-      Gere sugestões de sensibilidade, DPI e tamanho do botão
-      usando o modelo do celular e suas preferências.
+    <header class="brand">
+      <div class="logo">SW</div>
+      <div>
+        <p class="eyebrow">SENSI NO SEU RITMO</p>
+        <h1>THUR SENSI</h1>
+      </div>
+    </header>
+
+    <p class="intro">
+      Monte uma configuração inicial e ajuste no treino até encontrar
+      o toque que combina com você.
     </p>
 
     <section class="card">
+      <h2 class="section-title">Personalize sua configuração</h2>
+      <p class="section-hint">Conte como você joga e qual aparelho usa.</p>
+
       <label for="modelo">Modelo do celular</label>
-      <input id="modelo" placeholder="Ex.: Redmi Note 8">
+      <input id="modelo" placeholder="Ex.: Redmi Note 8" autocomplete="off">
 
-      <label for="estilo">Estilo de toque</label>
+      <label for="estilo">Seu estilo de toque</label>
       <select id="estilo">
-        <option value="suave">Toque suave</option>
+        <option value="suave">Suave e controlado</option>
         <option value="equilibrado" selected>Equilibrado</option>
-        <option value="rapido">Mais rápido</option>
+        <option value="rapido">Rápido e leve</option>
       </select>
 
-      <label for="tipoSensi">Tipo de sensibilidade</label>
+      <label for="tipoSensi">Sensibilidade que prefere</label>
       <select id="tipoSensi">
-        <option value="baixa">Sensi baixa</option>
-        <option value="normal" selected>Sensi normal</option>
-        <option value="alta">Sensi alta</option>
+        <option value="baixa">Baixa</option>
+        <option value="normal" selected>Equilibrada</option>
+        <option value="alta">Alta</option>
       </select>
 
-      <button type="button" onclick="gerar()">
-        Gerar recomendação
-      </button>
+      <button type="button" onclick="gerar()">✦ GERAR MINHA SENSI</button>
     </section>
 
     <section id="resultado" class="result">
       <div class="card">
-        <h2 id="titulo"></h2>
-        <div id="configuracoes"></div>
-      </div>
+        <div class="result-heading">
+          <h2 id="titulo"></h2>
+          <span class="badge">SUA CONFIG</span>
+        </div>
 
-      <p class="note">
-        Os valores são sugestões aproximadas, não configurações oficiais.
-        Teste no campo de treinamento e ajuste aos poucos. Antes de mudar a
-        DPI do celular, anote o valor original.
-      </p>
+        <div id="sensibilidades"></div>
 
-      <button class="secondary" type="button" onclick="copiar()">
-        Copiar recomendação
-      </button>
-    </section>
-  </main>
-
-  <script>
-    let textoParaCopiar = "";
-
-    function limitar(valor, minimo, maximo) {
-      return Math.max(minimo, Math.min(maximo, Math.round(valor)));
-    }
-
-    function criarValoresSensi(base) {
-      return {
-        "Geral": limitar(base, 0, 200),
-        "Ponto Vermelho": limitar(base - 5, 0, 200),
-        "Mira 2x": limitar(base - 15, 0, 200),
-        "Mira 4x": limitar(base - 25, 0, 200),
-        "AWM": limitar(base - 40, 0, 200),
-        "Olhadinha": limitar(base - 10, 0, 200)
-      };
-    }
-
-    function exibirValores(valores) {
-      return Object.entries(valores)
-        .map(([nome, valor]) =>
-          `<div class="stat"><span>${nome}</span><strong>${valor}</strong></div>`
-        )
-        .join("");
-    }
-
-    function gerar() {
-      const modelo = document.getElementById("modelo").value.trim();
-      const estilo = document.getElementById("estilo").value;
-      const tipoSensi = document.getElementById("tipoSensi").value;
-
-      if (!modelo) {
-        alert("Digite o modelo do celular primeiro 🙂");
-        return;
-      }
-
-      /*
-        Cria uma variação estável a partir do nome do aparelho.
-        Assim, o mesmo modelo gera a mesma recomendação, sem deixar
-        DPI e botão iguais para todos os celulares.
-      */
-      const codigoModelo = [...modelo.toLowerCase()]
-        .reduce((total, letra) => total + letra.charCodeAt(0), 0);
-
-      const variacaoModelo = (codigoModelo % 21) - 10;
-
-      const ajusteEstilo = {
-        suave: -8,
-        equilibrado: 0,
-        rapido: 8
-      }[estilo];
-
-      const ajusteTipo = {
-        baixa: -15,
-        normal: 0,
-        alta: 15
-      }[tipoSensi];
-
-      const baseSensi = 165 + variacaoModelo + ajusteEstilo + ajusteTipo;
-      const sensibilidades = criarValoresSensi(baseSensi);
-
-      /*
-        DPI e botão são recomendações calculadas com variação do modelo,
-        estilo de toque e tipo de sensibilidade.
-      */
-      const ajusteDpiEstilo = {
-        suave: -20,
-        equilibrado: 0,
-        rapido: 20
-      }[estilo];
-
-      const ajusteDpiTipo = {
-        baixa: -30,
-        normal: 0,
-        alta: 30
-      }[tipoSensi];
-
-      const dpi = limitar(
-        420 + variacaoModelo * 3 + ajusteDpiEstilo + ajusteDpiTipo,
-        320,
-        600
-      );
-
-      const ajusteBotaoEstilo = {
-        suave: 3,
-        equilibrado: 0,
-        rapido: -2
-      }[estilo];
-
-      const ajusteBotaoTipo = {
-        baixa: -3,
-        normal: 0,
-        alta: 3
-      }[tipoSensi];
-
-      const tamanhoBotao = limitar(
-        50 + Math.round(variacaoModelo / 4) +
-        ajusteBotaoEstilo + ajusteBotaoTipo,
-        40,
-        60
-      );
-
-      const titulo = `Recomendação para ${modelo}`;
-      document.getElementById("titulo").textContent = titulo;
-
-      document.getElementById("configuracoes").innerHTML =
-        exibirValores(sensibilidades) +
-        `<div class="stat"><span>DPI recomendada</span><strong>${dpi}</strong></div>` +
-        `<div class="stat"><span>Tamanho recomendado do botão</span><strong>${tamanhoBotao}%</strong></div>`;
-
-      document.getElementById("resultado").style.display = "block";
-
-      textoParaCopiar =
-        `SW Thur Sensibilidades — ${modelo}\n` +
-        `Estilo: ${estilo}\n` +
-        `Tipo: sensi ${tipoSensi}\n\n` +
-        Object.entries(sensibilidades)
-          .map(([nome, valor]) => `${nome}: ${valor}`)
-          .join("\n") +
-        `\nDPI recomendada: ${dpi}` +
-        `\nTamanho recomendado do botão: ${tamanhoBotao}%`;
-    }
-
-    async function copiar() {
-      if (!textoParaCopiar) {
-        alert("Gere uma recomendação antes de copiar 🙂");
-        return;
-      }
-
-      try {
-        await navigator.clipboard.writeText(textoParaCopiar);
-        alert("Recomendação copiada!");
-      } catch {
-        alert("Não foi possível copiar automaticamente. Tente selecionar e copiar o texto.");
-      }
-    }
-  </script>
-</body>
-</html>
+        <div class="recommendations" id: 
