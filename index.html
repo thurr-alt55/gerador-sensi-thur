@@ -4,165 +4,293 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#101018">
-  <title>Gerador de Sensi FF</title>
+  <title>SW Thur Sensibilidades</title>
+
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      margin: 0; padding: 24px 16px;
-      background: #101018; color: #f4f4f8;
+      margin: 0;
+      padding: 24px 16px;
+      background: #101018;
+      color: #f4f4f8;
       font: 16px Arial, sans-serif;
     }
-    main { max-width: 520px; margin: auto; }
-    h1 { color: #a78bfa; margin-bottom: 6px; }
-    p { color: #c5c5d2; line-height: 1.5; }
-    .card {
-      background: #1b1b27; border: 1px solid #333344;
-      border-radius: 16px; padding: 18px; margin: 16px 0;
+
+    main {
+      max-width: 520px;
+      margin: auto;
     }
-    label { display: block; margin: 14px 0 7px; font-weight: bold; }
+
+    h1 {
+      color: #a78bfa;
+      margin-bottom: 6px;
+    }
+
+    h2, h3 {
+      margin-top: 0;
+    }
+
+    p {
+      color: #c5c5d2;
+      line-height: 1.5;
+    }
+
+    .card {
+      background: #1b1b27;
+      border: 1px solid #333344;
+      border-radius: 16px;
+      padding: 18px;
+      margin: 16px 0;
+    }
+
+    label {
+      display: block;
+      margin: 14px 0 7px;
+      font-weight: bold;
+    }
+
     input, select, button {
-      width: 100%; padding: 13px; border-radius: 10px;
+      width: 100%;
+      padding: 13px;
+      border-radius: 10px;
       font-size: 16px;
     }
+
     input, select {
-      color: white; background: #11111a; border: 1px solid #454557;
+      color: white;
+      background: #11111a;
+      border: 1px solid #454557;
     }
+
     button {
-      margin-top: 18px; border: 0; background: #8b5cf6;
-      color: white; font-weight: bold; cursor: pointer;
+      margin-top: 18px;
+      border: 0;
+      background: #8b5cf6;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
     }
-    button.secondary { background: #343445; margin-top: 10px; }
-    .result { display: none; }
+
+    button:hover {
+      background: #7c3aed;
+    }
+
+    button.secondary {
+      background: #343445;
+      margin-top: 10px;
+    }
+
+    .result {
+      display: none;
+    }
+
     .stat {
-      display: flex; justify-content: space-between;
-      padding: 9px 0; border-bottom: 1px solid #343445;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 9px 0;
+      border-bottom: 1px solid #343445;
     }
-    .stat:last-child { border-bottom: 0; }
-    .note { font-size: 13px; color: #aaaaba; }
+
+    .stat:last-child {
+      border-bottom: 0;
+    }
+
+    .note {
+      font-size: 13px;
+      color: #aaaaba;
+    }
   </style>
 </head>
+
 <body>
-<main>
-  <h1>🎯 Gerador de Sensi FF</h1>
-  <p>Gere sugestões para testar no seu celular. Ajuste aos poucos até encontrar a que fica melhor pra você.</p>
+  <main>
+    <h1>🎯 SW Thur Sensibilidades</h1>
+    <p>
+      Gere sugestões de sensibilidade, DPI e tamanho do botão
+      usando o modelo do celular e suas preferências.
+    </p>
 
-  <section class="card">
-    <label for="modelo">Modelo do celular</label>
-    <input id="modelo" placeholder="Ex.: Redmi Note 8">
+    <section class="card">
+      <label for="modelo">Modelo do celular</label>
+      <input id="modelo" placeholder="Ex.: Redmi Note 8">
 
-    <label for="estilo">Estilo de toque</label>
-    <select id="estilo">
-      <option value="suave">Toque suave</option>
-      <option value="equilibrado">Equilibrado</option>
-      <option value="rapido">Mais rápido</option>
-    </select>
+      <label for="estilo">Estilo de toque</label>
+      <select id="estilo">
+        <option value="suave">Toque suave</option>
+        <option value="equilibrado" selected>Equilibrado</option>
+        <option value="rapido">Mais rápido</option>
+      </select>
 
-    <label for="tipoSensi">Tipo de sensibilidade</label>
-    <select id="tipoSensi">
-      <option value="normal">Sensi normal</option>
-      <option value="baixa">Sensi baixa</option>
-      <option value="alta">Sensi alta</option>
-    </select>
+      <label for="tipoSensi">Tipo de sensibilidade</label>
+      <select id="tipoSensi">
+        <option value="baixa">Sensi baixa</option>
+        <option value="normal" selected>Sensi normal</option>
+        <option value="alta">Sensi alta</option>
+      </select>
 
-    <button onclick="gerar()">Gerar sensibilidade</button>
-  </section>
+      <button type="button" onclick="gerar()">
+        Gerar recomendação
+      </button>
+    </section>
 
-  <section id="resultado" class="result">
-    <div class="card">
-      <h2 id="titulo"></h2>
-      <h3>Sem DPI</h3>
-      <div id="semDpi"></div>
-    </div>
-    <div class="card">
-      <h3>Com DPI</h3>
-      <div id="comDpi"></div>
-      <p class="note">Ajuste o DPI nas configurações do aparelho somente se souber como voltar ao valor anterior.</p>
-    </div>
-    <button class="secondary" onclick="copiar()">Copiar configurações</button>
-    <p class="note">Sugestão inicial, não é configuração oficial nem garantia de resultado. Teste no campo de treinamento.</p>
-  </section>
-</main>
+    <section id="resultado" class="result">
+      <div class="card">
+        <h2 id="titulo"></h2>
+        <div id="configuracoes"></div>
+      </div>
 
-<script>
-  let textoParaCopiar = "";
+      <p class="note">
+        Os valores são sugestões aproximadas, não configurações oficiais.
+        Teste no campo de treinamento e ajuste aos poucos. Antes de mudar a
+        DPI do celular, anote o valor original.
+      </p>
 
-  function limitar(valor) {
-    return Math.max(0, Math.min(200, Math.round(valor)));
-  }
+      <button class="secondary" type="button" onclick="copiar()">
+        Copiar recomendação
+      </button>
+    </section>
+  </main>
 
-  function montarValores(base) {
-    return {
-      "Geral": limitar(base),
-      "Ponto Vermelho": limitar(base - 5),
-      "Mira 2x": limitar(base - 15),
-      "Mira 4x": limitar(base - 25),
-      "AWM": limitar(base - 40),
-      "Olhadinha": limitar(base - 10)
-    };
-  }
+  <script>
+    let textoParaCopiar = "";
 
-  function mostrar(id, valores) {
-    document.getElementById(id).innerHTML = Object.entries(valores)
-      .map(([nome, valor]) =>
-        `<div class="stat"><span>${nome}</span><strong>${valor}</strong></div>`
-      ).join("");
-  }
-
-  function gerar() {
-    const modelo = document.getElementById("modelo").value.trim();
-    const estilo = document.getElementById("estilo").value;
-    const tipoSensi = document.getElementById("tipoSensi").value;
-
-    if (!modelo) {
-      alert("Digite o modelo do celular primeiro 🙂");
-      return;
+    function limitar(valor, minimo, maximo) {
+      return Math.max(minimo, Math.min(maximo, Math.round(valor)));
     }
 
-    const ajusteEstilo = { suave: -8, equilibrado: 0, rapido: 8 }[estilo];
-    const ajusteSensi = { baixa: -15, normal: 0, alta: 15 }[tipoSensi];
-    const codigoModelo = [...modelo.toLowerCase()]
-      .reduce((total, letra) => total + letra.charCodeAt(0), 0);
-    const variacaoModelo = (codigoModelo % 31) - 15;
-    const base = 165 + ajusteEstilo + ajusteSensi + variacaoModelo;
-
-    const semDpi = montarValores(base);
-    const comDpi = montarValores(base - 15);
-    const dpi = { baixa: 400, normal: 460, alta: 520 }[tipoSensi];
-    const botao = { baixa: 45, normal: 50, alta: 55 }[tipoSensi];
-
-    document.getElementById("titulo").textContent =
-      `Sugestão para ${modelo} — sensi ${tipoSensi}`;
-
-    mostrar("semDpi", {
-      ...semDpi,
-      "Tamanho do botão": `${botao}%`
-    });
-
-    mostrar("comDpi", {
-      ...comDpi,
-      "DPI recomendado": dpi,
-      "Tamanho do botão": `${botao}%`
-    });
-
-    document.getElementById("resultado").style.display = "block";
-
-    textoParaCopiar =
-      `Free Fire — ${modelo}\nEstilo: ${estilo}\nTipo: sensi ${tipoSensi}\n\n` +
-      `Sem DPI:\n` +
-      Object.entries(semDpi).map(([nome, valor]) => `${nome}: ${valor}`).join("\n") +
-      `\nTamanho do botão: ${botao}%\n\nCom DPI (${dpi}):\n` +
-      Object.entries(comDpi).map(([nome, valor]) => `${nome}: ${valor}`).join("\n") +
-      `\nTamanho do botão: ${botao}%`;
-  }
-
-  async function copiar() {
-    try {
-      await navigator.clipboard.writeText(textoParaCopiar);
-      alert("Configurações copiadas!");
-    } catch {
-      alert("Não deu para copiar automaticamente. Selecione e copie os valores.");
+    function criarValoresSensi(base) {
+      return {
+        "Geral": limitar(base, 0, 200),
+        "Ponto Vermelho": limitar(base - 5, 0, 200),
+        "Mira 2x": limitar(base - 15, 0, 200),
+        "Mira 4x": limitar(base - 25, 0, 200),
+        "AWM": limitar(base - 40, 0, 200),
+        "Olhadinha": limitar(base - 10, 0, 200)
+      };
     }
-  }
-</script>
+
+    function exibirValores(valores) {
+      return Object.entries(valores)
+        .map(([nome, valor]) =>
+          `<div class="stat"><span>${nome}</span><strong>${valor}</strong></div>`
+        )
+        .join("");
+    }
+
+    function gerar() {
+      const modelo = document.getElementById("modelo").value.trim();
+      const estilo = document.getElementById("estilo").value;
+      const tipoSensi = document.getElementById("tipoSensi").value;
+
+      if (!modelo) {
+        alert("Digite o modelo do celular primeiro 🙂");
+        return;
+      }
+
+      /*
+        Cria uma variação estável a partir do nome do aparelho.
+        Assim, o mesmo modelo gera a mesma recomendação, sem deixar
+        DPI e botão iguais para todos os celulares.
+      */
+      const codigoModelo = [...modelo.toLowerCase()]
+        .reduce((total, letra) => total + letra.charCodeAt(0), 0);
+
+      const variacaoModelo = (codigoModelo % 21) - 10;
+
+      const ajusteEstilo = {
+        suave: -8,
+        equilibrado: 0,
+        rapido: 8
+      }[estilo];
+
+      const ajusteTipo = {
+        baixa: -15,
+        normal: 0,
+        alta: 15
+      }[tipoSensi];
+
+      const baseSensi = 165 + variacaoModelo + ajusteEstilo + ajusteTipo;
+      const sensibilidades = criarValoresSensi(baseSensi);
+
+      /*
+        DPI e botão são recomendações calculadas com variação do modelo,
+        estilo de toque e tipo de sensibilidade.
+      */
+      const ajusteDpiEstilo = {
+        suave: -20,
+        equilibrado: 0,
+        rapido: 20
+      }[estilo];
+
+      const ajusteDpiTipo = {
+        baixa: -30,
+        normal: 0,
+        alta: 30
+      }[tipoSensi];
+
+      const dpi = limitar(
+        420 + variacaoModelo * 3 + ajusteDpiEstilo + ajusteDpiTipo,
+        320,
+        600
+      );
+
+      const ajusteBotaoEstilo = {
+        suave: 3,
+        equilibrado: 0,
+        rapido: -2
+      }[estilo];
+
+      const ajusteBotaoTipo = {
+        baixa: -3,
+        normal: 0,
+        alta: 3
+      }[tipoSensi];
+
+      const tamanhoBotao = limitar(
+        50 + Math.round(variacaoModelo / 4) +
+        ajusteBotaoEstilo + ajusteBotaoTipo,
+        40,
+        60
+      );
+
+      const titulo = `Recomendação para ${modelo}`;
+      document.getElementById("titulo").textContent = titulo;
+
+      document.getElementById("configuracoes").innerHTML =
+        exibirValores(sensibilidades) +
+        `<div class="stat"><span>DPI recomendada</span><strong>${dpi}</strong></div>` +
+        `<div class="stat"><span>Tamanho recomendado do botão</span><strong>${tamanhoBotao}%</strong></div>`;
+
+      document.getElementById("resultado").style.display = "block";
+
+      textoParaCopiar =
+        `SW Thur Sensibilidades — ${modelo}\n` +
+        `Estilo: ${estilo}\n` +
+        `Tipo: sensi ${tipoSensi}\n\n` +
+        Object.entries(sensibilidades)
+          .map(([nome, valor]) => `${nome}: ${valor}`)
+          .join("\n") +
+        `\nDPI recomendada: ${dpi}` +
+        `\nTamanho recomendado do botão: ${tamanhoBotao}%`;
+    }
+
+    async function copiar() {
+      if (!textoParaCopiar) {
+        alert("Gere uma recomendação antes de copiar 🙂");
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(textoParaCopiar);
+        alert("Recomendação copiada!");
+      } catch {
+        alert("Não foi possível copiar automaticamente. Tente selecionar e copiar o texto.");
+      }
+    }
+  </script>
 </body>
 </html>
