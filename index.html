@@ -266,126 +266,240 @@
     <footer class="footer">SW • FEITO NO SEU RITMO</footer>
   </main>
 
-  <script>
-    "use strict";
+<script>
+  "use strict";
 
-    let textoParaCopiar = "";
+  let textoParaCopiar = "";
 
-    function limitar(valor, minimo, maximo) {
-      return Math.max(minimo, Math.min(maximo, Math.round(valor)));
-    }
+  // Lista de modelos que o gerador reconhece.
+  // Para incluir outro, acrescente o nome entre aspas.
+  const modelosValidos = [
+    // Samsung Galaxy A
+    ...[3, 4, 5, 6, 7, 10, 11, 12, 13, 14, 15, 16, 17,
+        20, 21, 22, 23, 24, 25, 26, 30, 31, 32, 33, 34,
+        35, 36, 50, 51, 52, 53, 54, 55, 56, 70, 71, 72, 73]
+      .flatMap(numero => {
+        const modelo = `A${String(numero).padStart(2, "0")}`;
+        return [
+          `Samsung Galaxy ${modelo}`,
+          `Galaxy ${modelo}`,
+          `Samsung ${modelo}`,
+          modelo
+        ];
+      }),
 
-    function gerar() {
-      const modelo = document.getElementById("modelo").value.trim();
-      const estilo = document.getElementById("estilo").value;
-      const tipo = document.getElementById("tipoSensi").value;
+    // Variantes Samsung Galaxy A
+    "Samsung Galaxy A05s", "Galaxy A05s", "Samsung A05s", "A05s",
+    "Samsung Galaxy A06 5G", "Galaxy A06 5G",
+    "Samsung Galaxy A16 5G", "Galaxy A16 5G",
+    "Samsung Galaxy A26 5G", "Galaxy A26 5G",
+    "Samsung Galaxy A36 5G", "Galaxy A36 5G",
+    "Samsung Galaxy A56 5G", "Galaxy A56 5G",
 
-      if (!modelo) {
-        alert("Digite o modelo do celular primeiro 🙂");
-        document.getElementById("modelo").focus();
-        return;
-      }
+    // Samsung Galaxy S
+    ...[20, 21, 22, 23, 24, 25, 26].flatMap(numero => [
+      `Samsung Galaxy S${numero}`,
+      `Galaxy S${numero}`,
+      `Samsung Galaxy S${numero} Plus`,
+      `Galaxy S${numero} Plus`,
+      `Samsung Galaxy S${numero} Ultra`,
+      `Galaxy S${numero} Ultra`
+    ]),
 
-      // Variação ilustrativa estável baseada no texto digitado.
-      const somaLetras = Array.from(modelo.toLowerCase())
-        .reduce((total, letra) => total + letra.charCodeAt(0), 0);
-      const variacao = (somaLetras % 21) - 10;
+    // Xiaomi Redmi
+    ...[9, 10, 12, 13, 14, 15].map(numero => `Redmi ${numero}`),
+    ...[8, 9, 10, 11, 12, 13, 14].map(numero => `Redmi Note ${numero}`),
 
-      const ajusteEstilo = {
-        suave: -8,
-        equilibrado: 0,
-        rapido: 8
-}[estilo];
+    // POCO
+    ...[3, 4, 5, 6, 7].flatMap(numero => [
+      `POCO M${numero}`,
+      `POCO X${numero}`
+    ]),
 
-      const ajusteTipo = {
-        baixa: -15,
-        normal: 0,
-        alta: 15
-      }[tipo];
+    // Motorola Moto G
+    ...[20, 22, 23, 24, 30, 32, 34, 50, 52, 53, 54, 55,
+        60, 62, 73, 84, 85].map(numero => `Moto G${numero}`),
 
-      const base = limitar(165 + variacao + ajusteEstilo + ajusteTipo, 100, 200);
+    // iPhones: modelos base, Pro, Pro Max e Plus
+    ...[11, 12, 13, 14, 15, 16, 17].flatMap(numero => [
+      `iPhone ${numero}`,
+      `iPhone ${numero} Pro`,
+      `iPhone ${numero} Pro Max`,
+      `iPhone ${numero} Plus`
+    ]),
 
-      const sensibilidades = {
-        "Geral": base,
-        "Ponto Vermelho": limitar(base - 5, 0, 200),
-        "Mira 2x": limitar(base - 15, 0, 200),
-        "Mira 4x": limitar(base - 25, 0, 200),
-        "AWM": limitar(base - 40, 0, 200),
-        "Olhadinha": limitar(base - 10, 0, 200)
-      };
+    "iPhone 12 mini",
+    "iPhone 13 mini",
+    "iPhone SE",
+    "iPhone SE 2020",
+    "iPhone SE 2022"
+  ];
 
-      const dpi = limitar(
-        420 + variacao * 3 +
-        { suave: -20, equilibrado: 0, rapido: 20 }[estilo] +
-        { baixa: -30, normal: 0, alta: 30 }[tipo],
-        320,
-        600
+  function normalizar(texto) {
+    return texto
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function modeloExiste(modeloDigitado) {
+    const digitado = normalizar(modeloDigitado);
+
+    return modelosValidos.some(modelo => {
+      const nome = normalizar(modelo);
+
+      return digitado === nome ||
+        digitado === nome.replace("samsung galaxy ", "") ||
+        digitado === nome.replace("galaxy ", "") ||
+        digitado === nome.replace("samsung ", "");
+    });
+  }
+
+  function limitar(valor, minimo, maximo) {
+    return Math.max(minimo, Math.min(maximo, Math.round(valor)));
+  }
+
+  function aleatorio(minimo, maximo) {
+    return Math.floor(Math.random() * (maximo - minimo + 1)) + minimo;
+  }
+
+  function gerar() {
+    const campoModelo = document.getElementById("modelo");
+    const modelo = campoModelo.value.trim();
+    const estilo = document.getElementById("estilo").value;
+    const tipo = document.getElementById("tipoSensi").value;
+
+    if (!modelo || !modeloExiste(modelo)) {
+      alert(
+        "Digite um modelo de celular verdadeiro e compatível, " +
+        "como Samsung Galaxy A07, Samsung A05s ou iPhone 17 Pro Max."
       );
-
-      const botao = limitar(
-        50 + Math.round(variacao / 4) +
-        { suave: 3, equilibrado: 0, rapido: -2 }[estilo] +
-        { baixa: -3, normal: 0, alta: 3 }[tipo],
-        40,
-        60
-      );
-
-      document.getElementById("titulo").textContent = `Config para ${modelo}`;
-
-      document.getElementById("sensibilidades").innerHTML =
-        Object.entries(sensibilidades)
-          .map(([nome, valor]) =>
-            `<div class="stat"><span>${nome}</span><strong>${valor}</strong></div>`
-          )
-          .join("");
-
-      document.getElementById("recomendacoes").innerHTML =
-        `<div class="stat"><span>DPI sugerida</span><strong>${dpi}</strong></div>
-         <div class="stat"><span>Botão de disparo</span><strong>${botao}%</strong></div>`;
-
-      document.getElementById("resultado").style.display = "block";
-
-      textoParaCopiar =
-        `SW Thur Sensi — ${modelo}\n` +
-        Object.entries(sensibilidades)
-          .map(([nome, valor]) => `${nome}: ${valor}`)
-          .join("\n") +
-        `\nDPI sugerida: ${dpi}\nBotão de disparo: ${botao}%`;
-
-      document.getElementById("resultado").scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
+      campoModelo.focus();
+      return;
     }
 
-    async function copiar() {
-      if (!textoParaCopiar) {
-        alert("Gere uma configuração antes de copiar 🙂");
-        return;
-      }
+    const ajusteEstilo = {
+      suave: -8,
+      equilibrado: 0,
+      rapido: 8
+    }[estilo];
 
-      try {
-        await navigator.clipboard.writeText(textoParaCopiar);
-        alert("Configuração copiada!");
-      } catch (erro) {
-        const campo = document.createElement("textarea");
-        campo.value = textoParaCopiar;
-        campo.style.position = "fixed";
-        campo.style.opacity = "0";
-        document.body.appendChild(campo);
-        campo.select();
+    const ajusteTipo = {
+      baixa: -15,
+      normal: 0,
+      alta: 15
+    }[tipo];
 
-        const copiou = document.execCommand("copy");
-        campo.remove();
+    // Sugestão de sensibilidade. Os valores variam um pouco
+    // e servem apenas como ponto de partida para testar.
+    const sensiBase = limitar(
+      165 + ajusteEstilo + ajusteTipo + aleatorio(-8, 8),
+      100,
+      200
+    );
 
-        alert(copiou
-          ? "Configuração copiada!"
-          : "Não foi possível copiar. Selecione e copie o resultado manualmente.");
-      }
+    const sensibilidades = {
+      "Geral": sensiBase,
+      "Ponto Vermelho": limitar(sensiBase - aleatorio(3, 8), 0, 200),
+      "Mira 2x": limitar(sensiBase - aleatorio(10, 20), 0, 200),
+      "Mira 4x": limitar(sensiBase - aleatorio(20, 32), 0, 200),
+      "AWM": limitar(sensiBase - aleatorio(32, 48), 0, 200),
+      "Olhadinha": limitar(sensiBase - aleatorio(5, 14), 0, 200)
+    };
+
+    // A DPI e o botão também variam e acompanham
+    // o estilo e a sensibilidade escolhidos.
+    let dpiMin = 390;
+    let dpiMax = 520;
+    let botaoMin = 42;
+    let botaoMax = 58;
+
+    if (estilo === "suave") {
+      dpiMin -= 25;
+      dpiMax -= 20;
+      botaoMin += 3;
+      botaoMax += 3;
+    } else if (estilo === "rapido") {
+      dpiMin += 20;
+      dpiMax += 25;
+      botaoMin -= 3;
+      botaoMax -= 3;
     }
 
-    document.getElementById("gerarBtn").addEventListener("click", gerar);
-    document.getElementById("copiarBtn").addEventListener("click", copiar);
-  </script>
+    if (tipo === "baixa") {
+      dpiMin -= 20;
+      dpiMax -= 15;
+      botaoMin -= 2;
+      botaoMax -= 2;
+    } else if (tipo === "alta") {
+      dpiMin += 15;
+      dpiMax += 20;
+      botaoMin += 2;
+      botaoMax += 2;
+    }
+
+    const dpi = limitar(aleatorio(dpiMin, dpiMax), 320, 600);
+    const botao = limitar(aleatorio(botaoMin, botaoMax), 40, 60);
+
+    document.getElementById("titulo").textContent =
+      `Configuração para ${modelo}`;
+
+    document.getElementById("sensibilidades").innerHTML =
+      Object.entries(sensibilidades)
+        .map(([nome, valor]) =>
+          `<div class="stat"><span>${nome}</span><strong>${valor}</strong></div>`
+        )
+        .join("");
+
+    document.getElementById("recomendacoes").innerHTML =
+      `<div class="stat"><span>DPI sugerida</span><strong>${dpi}</strong></div>
+       <div class="stat"><span>Botão de disparo</span><strong>${botao}%</strong></div>`;
+
+    document.getElementById("resultado").style.display = "block";
+
+    textoParaCopiar =
+      `SW Thur Sensi — ${modelo}\n` +
+      Object.entries(sensibilidades)
+        .map(([nome, valor]) => `${nome}: ${valor}`)
+        .join("\n") +
+      `\nDPI sugerida: ${dpi}\nBotão de disparo: ${botao}%`;
+
+    document.getElementById("resultado").scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
+  async function copiar() {
+    if (!textoParaCopiar) {
+      alert("Gere uma configuração antes de copiar 🙂");
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(textoParaCopiar);
+      alert("Configuração copiada!");
+    } catch {
+      const campo = document.createElement("textarea");
+      campo.value = textoParaCopiar;
+      campo.style.position = "fixed";
+      campo.style.opacity = "0";
+      document.body.appendChild(campo);
+      campo.select();
+
+      const copiou = document.execCommand("copy");
+      campo.remove();
+
+      alert(copiou
+        ? "Configuração copiada!"
+        : "Não foi possível copiar. Copie o resultado manualmente.");
+    }
+  }
+
+  document.getElementById("gerarBtn").addEventListener("click", gerar);
+  document.getElementById("copiarBtn").addEventListener("click", copiar);
+</script>
 </body>
 </html>
