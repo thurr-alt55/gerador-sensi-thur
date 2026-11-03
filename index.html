@@ -234,18 +234,15 @@
         .trim();
     }
 
- function modeloExiste(textoDigitado) {
-  const modelo = normalizar(textoDigitado)
-    .replace(/samsung|galaxy/g, "")
-    .replace(/[\s-]/g, "");
+function modeloExiste(textoDigitado) {
+  const limpar = texto =>
+    normalizar(texto)
+      .replace(/\b(samsung|galaxy)\b/g, "")
+      .replace(/[^a-z0-9]/g, "");
 
-  return modelo === "a07" ||
-    modelosValidos.some(item => {
-      const nome = normalizar(item)
-        .replace(/samsung|galaxy/g, "")
-        .replace(/[\s-]/g, "");
-      return modelo === nome;
-    });
+  const digitado = limpar(textoDigitado);
+
+  return modelosValidos.some(nome => limpar(nome) === digitado);
 }
 
     function limitar(valor, minimo, maximo) {
