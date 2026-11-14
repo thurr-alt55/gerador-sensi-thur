@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090b12">
+  <title>SW Thur Sensibilidades</title>
+
+  <style>
+    :root {
+      --bg: #090b12;
+      --card: #131724;
+      --line: rgba(151,126,255,.25);
+      --cyan: #4de8e2;
+      --text: #f4f2ff;
+      --muted: #a6a8ba;
+      --error: #ff7b87;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 28px 16px 40px;
+      color: var(--text);
+      font: 16px/1.5 system-ui, Arial, sans-serif;
+      background:
+        radial-gradient(ellipse at 15% 0%, rgba(111,66,193,.24), transparent 38%),
+        radial-gradient(ellipse at 100% 45%, rgba(34,186,190,.10), transparent 34%),
+        var(--bg);
+    }
+
+    main { max-width: 560px; margin: auto; }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      margin: 6px 0 24px;
+    }
+
+    .logo {
+      width: 52px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      border: 1px solid rgba(77,232,226,.55);
+      border-radius: 16px;
+      color: var(--cyan);
+      font-weight: 900;
+      background: linear-gradient(145deg,#1d2340,#10131e);
+    }
+
+    .eyebrow {
+      margin: 0 0 2px;
+      color: var(--cyan);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 2px;
+    }
+
+    h1 { margin: 0; font-size: clamp(23px,7vw,32px); line-height: 1.1; }
+    .intro { margin: 0 0 20px; color: var(--muted); }
+
+    .card {
+      margin: 16px 0;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--card);
+      box-shadow: 0 16px 45px rgba(0,0,0,.22);
+    }
+
+    .section-title { margin: 0 0 3px; font-size: 18px; }
+    .section-hint { margin: 0 0 15px; color: var(--muted); font-size: 13px; }
+
+    label {
+      display: block;
+      margin: 15px 0 7px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    input, select, button {
+      width: 100%;
+      min-height: 50px;
+      padding: 13px 14px;
+      border-radius: 12px;
+      font: inherit;
+    }
+
+    input, select {
+      color: var(--text);
+      border: 1px solid #34394e;
+      background: #0d1019;
+    }
+
+    input:focus, select:focus { outline: 2px solid var(--cyan); }
+    input::placeholder { color: #777b8e; }
+
+    button {
+      margin-top: 20px;
+      border: 0;
+      color: #100c1b;
+      font-weight: 900;
+      letter-spacing: .5px;
+      cursor: pointer;
+      background: linear-gradient(100deg,var(--cyan),#9b8aff 85%);
+    }
+
+    button:hover { filter: brightness(1.08); }
+
+    .secondary {
+      margin-top: 12px;
+      color: var(--text);
+      border: 1px solid #3c4158;
+      background: #191d2b;
+    }
+
+    .step[hidden], .result[hidden] { display: none !important; }
+
+    .step-indicator {
+      color: var(--cyan);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .error {
+      min-height: 20px;
+      margin: 7px 0 0;
+      color: var(--error);
+      font-size: 12px;
+    }
+
+    .result-heading {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .result-heading h2 { margin: 0; font-size: 20px; }
+
+    .badge {
+      flex: 0 0 auto;
+      padding: 5px 9px;
+      border: 1px solid rgba(77,232,226,.3);
+      border-radius: 999px;
+      color: var(--cyan);
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .stat {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 11px 0;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+
+    .stat span { color: #c5c7d6; }
+    .stat strong { color: var(--cyan); text-align: right; }
+
+    .recommendations {
+      margin-top: 16px;
+      padding: 4px 14px;
+      border: 1px solid rgba(77,232,226,.18);
+      border-radius: 14px;
+    }
+
+    .note { margin: 14px 2px 0; color: var(--muted); font-size: 12px; }
+    .footer { margin-top: 24px; color: #74788b; text-align: center; font-size: 11px; }
+
+    @media (max-width: 380px) {
+      .card { padding: 16px; }
+      .result-heading { flex-direction: column; }
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <header class="brand">
+      <div class="logo">SW</div>
+      <div>
+        <p class="eyebrow">SENSI NO SEU RITMO</p>
+        <h1>THUR SENSI</h1>
+      </div>
+    </header>
+
+    <p class="intro">
+      Gere uma configuração inicial e ajuste no treino até encontrar o toque ideal.
+    </p>
+
+    <section class="card">
+      <h2 class="section-title">Personalize sua configuração</h2>
+      <p class="section-hint">Responda uma etapa por vez.</p>
+
+      <div id="etapa1" class="step">
+        <p class="step-indicator">ETAPA 1 DE 3</p>
+
+        <label for="versaoJogo">Qual versão do Free Fire você joga?</label>
+        <select id="versaoJogo">
+          <option value="">Escolha uma opção</option>
+          <option value="normal">Free Fire normal</option>
+          <option value="max">Free Fire MAX</option>
+        </select>
+
+        <label for="modelo">Modelo do celular</label>
+        <input
+          id="modelo"
+          type="text"
+          list="modelosDisponiveis"
+          placeholder="Ex.: Samsung Galaxy A07"
+          autocomplete="off"
+        >
+        <datalist id="modelosDisponiveis"></datalist>
+        <p id="erroModelo" class="error" role="alert"></p>
+
+        <button id="confirmar1" type="button">CONFIRMAR E CONTINUAR</button>
+      </div>
+
+      <div id="etapa2" class="step" hidden>
+        <p class="step-indicator">ETAPA 2 DE 3</p>
+        <label for="estilo">Seu estilo de toque</label>
+        <select id="estilo">
+          <option value="">Escolha uma opção</option>
+          <option value="suave">Suave e controlado</option>
+          <option value="equilibrado">Equilibrado</option>
+          <option value="rapido">Rápido e leve</option>
+        </select>
+        <button id="confirmar2" type="button">CONFIRMAR E CONTINUAR</button>
+      </div>
+
+      <div id="etapa3" class="step" hidden>
+        <p class="step-indicator">ETAPA 3 DE 3</p>
+        <label for="tipoSensi">Nível de sensibilidade</label>
+        <select id="tipoSensi">
+          <option value="">Escolha uma opção</option>
+          <option value="baixa">Baixa</option>
+          <option value="normal">Equilibrada</option>
+          <option value="alta">Alta</option>
+        </select>
+        <button id="confirmar3" type="button">CONFIRMAR</button>
+      </div>
+
+      <div id="etapaGerar" class="step" hidden>
+        <p class="section-hint">Tudo pronto. Gere sua configuração.</p>
+        <button id="gerarBtn" type="button">✦ GERAR MINHA SENSI</button>
+      </div>
+    </section>
+
+    <section id="resultado" class="result" aria-live="polite" hidden>
+      <div class="card">
+        <div class="result-heading">
+          <h2>Sua configuração</h2>
+          <span class="badge" id="badgeVersao">FREE FIRE</span>
+        </div>
+
+        <div class="stat"><span>Modelo reconhecido</span><strong id="resultadoModelo">—</strong></div>
+        <div class="stat"><span>Estilo de toque</span><strong id="resultadoEstilo">—</strong></div>
+        <div class="stat"><span>Nível escolhido</span><strong id="resultadoNivel">—</strong></div>
+        <div class="stat"><span>DPI sugerida</span><strong id="resultadoDPI">—</strong></div>
+        <div class="stat"><span>Tamanho do botão de tiro</span><strong id="resultadoBotao">—</strong></div>
+
+        <div class="recommendations">
+          <div class="stat"><span>Geral</span><strong id="sensiGeral">—</strong></div>
+          <div class="stat"><span>Ponto vermelho</span><strong id="sensiRedDot">—</strong></div>
+          <div class="stat"><span>2x</span><strong id="sensi2x">—</strong></div>
+          <div class="stat"><span>4x</span><strong id="sensi4x">—</strong></div>
+          <div class="stat"><span>AWM</span><strong id="sensiAWM">—</strong></div>
+          <div class="stat"><span>Olhadinha</span><strong id="sensiOlhadinha">—</strong></div>
+        </div>
+
+        <p class="note">
+          São sugestões para testar no treino, não configurações oficiais.
+          A sensibilidade ideal varia conforme o jogador e o aparelho.
+        </p>
+
+        <button id="copiarBtn" class="secondary" type="button">COPIAR CONFIGURAÇÃO</button>
+        <button id="reiniciarBtn" class="secondary" type="button">FAZER OUTRA CONFIGURAÇÃO</button>
+      </div>
+    </section>
+
+    <p class="footer">SW Thur Sensibilidades</p>
+  </main>
+
+  <script>
+    /*
+      Modelos cadastrados e apelidos aceitos.
+      Você pode acrescentar modelos nesta lista.
+    */
+    const modelos = [
+      { nome: "Samsung Galaxy A07", aliases: ["samsung galaxy a07", "samsung a07", "galaxy a07"], ajuste: -3, dpi: [470, 850], botao: [35, 65] },
+      { nome: "Samsung Galaxy A06", aliases: ["samsung galaxy a06", "samsung a06", "galaxy a06"], ajuste: -2, dpi: [470, 850], botao: [35, 65] },
+      { nome: "Samsung Galaxy A15", aliases: ["samsung galaxy a15", "samsung a15", "galaxy a15"], ajuste: 0, dpi: [470, 900], botao: [35, 65] },
+      { nome: "Samsung Galaxy A16", aliases: ["samsung galaxy a16", "samsung a16", "galaxy a16"], ajuste: 1, dpi: [470, 900], botao: [35, 65] },
+      { nome: "Samsung Galaxy A25", aliases: ["samsung galaxy a25", "samsung a25", "galaxy a25"], ajuste: 2, dpi: [470, 900], botao: [30, 65] },
+      { nome: "Samsung Galaxy A35", aliases: ["samsung galaxy a35", "samsung a35", "galaxy a35"], ajuste: 3, dpi: [470, 950], botao: [30, 65] },
+      { nome: "Samsung Galaxy A55", aliases: ["samsung galaxy a55", "samsung a55", "galaxy a55"], ajuste: 4, dpi: [470, 950], botao: [30, 65] },
+      { nome: "Samsung Galaxy S23", aliases: ["samsung galaxy s23", "galaxy s23"], ajuste: 4, dpi: [470, 1000], botao: [25, 60] },
+      { nome: "Samsung Galaxy S24", aliases: ["samsung galaxy s24", "galaxy s24"], ajuste: 5, dpi: [470, 1000], botao: [25, 60] },
+      { nome: "Samsung Galaxy S25", aliases: ["samsung galaxy s25", "galaxy s25"], ajuste: 6, dpi: [470, 1000], botao: [25, 60] },
+
+      { nome: "iPhone 11", aliases: ["iphone 11", "apple iphone 11"], ajuste: 2, dpi: [400, 800], botao: [35, 65] },
+      { nome: "iPhone 12", aliases: ["iphone 12", "apple iphone 12"], ajuste: 3, dpi: [400, 800], botao: [35, 65] },
+      { nome: "iPhone 13", aliases: ["iphone 13", "apple iphone 13"], ajuste: 4, dpi: [400, 800], botao: [35, 65] },
+      { nome: "iPhone 14", aliases: ["iphone 14", "apple iphone 14"], ajuste: 5, dpi: [400, 800], botao: [30, 65] },
+      { nome: "iPhone 15", aliases: ["iphone 15", "apple iphone 15"], ajuste: 6, dpi: [400, 800], botao: [30, 65] },
+      { nome: "iPhone 16", aliases: ["iphone 16", "apple iphone 16"], ajuste: 7, dpi: [400, 800], botao: [30, 65] },
+
+      { nome: "iPhone 11 Pro Max", aliases: ["iphone 11 pro max"], ajuste: 5, dpi: [400, 800], botao: [30, 60] },
+      { nome: "iPhone 12 Pro Max", aliases: ["iphone 12 pro max"], ajuste: 6, dpi: [400, 800], botao: [30, 60] },
+      { nome: "iPhone 13 Pro Max", aliases: ["iphone 13 pro max"], ajuste: 7, dpi: [400, 800], botao: [25, 60] },
+      { nome: "iPhone 14 Pro Max", aliases: ["iphone 14 pro max"], ajuste: 8, dpi: [400, 800], botao: [25, 60] },
+      { nome: "iPhone 15 Pro Max", aliases: ["iphone 15 pro max"], ajuste: 9, dpi: [400, 800], botao: [25, 60] },
+      { nome: "iPhone 16 Pro Max", aliases: ["iphone 16 pro max"], ajuste: 10, dpi: [400, 800], botao: [25, 60] },
+      { nome: "iPhone 13 Pro", aliases: ["iphone 13 pro"], ajuste: 7, dpi: [400, 800], botao: [25, 60] },
+      { nome: "iPhone 14 Pro", aliases: ["iphone 14 pro"], ajuste: 8, dpi: [400, 800], botao: [25, 60] },
+      { nome: "iPhone 15 Pro", aliases: ["iphone 15 pro"], ajuste: 9, dpi: [400, 800], botao: [25, 60] },
+      { nome: "iPhone 16 Pro", aliases: ["iphone 16 pro"], ajuste: 10, dpi: [400, 800], botao: [25, 60] },
+
+      { nome: "Redmi Note 13", aliases: ["redmi note 13", "xiaomi redmi note 13"], ajuste: 1, dpi: [450, 950], botao: [30, 65] },
+      { nome: "Redmi Note 14", aliases: ["redmi note 14", "xiaomi redmi note 14"], ajuste: 2, dpi: [450, 950], botao: [30, 65] },
+      { nome: "Redmi Note 13 Pro", aliases: ["redmi note 13 pro"], ajuste: 4, dpi: [450, 1000], botao: [25, 60] },
+      { nome: "Redmi Note 14 Pro", aliases: ["redmi note 14 pro"], ajuste: 5, dpi: [450, 1000], botao: [25, 60] },
+      { nome: "Redmi 13C", aliases: ["redmi 13c", "xiaomi redmi 13c"], ajuste: -2, dpi: [450, 850], botao: [35, 65] },
+      { nome: "Redmi 14C", aliases: ["redmi 14c", "xiaomi redmi 14c"], ajuste: -1, dpi: [450, 850], botao: [35, 65] },
+
+      { nome: "POCO X6 Pro", aliases: ["poco x6 pro", "xiaomi poco x6 pro"], ajuste: 7, dpi: [450, 1000], botao: [25, 60] },
+      { nome: "POCO X7 Pro", aliases: ["poco x7 pro", "xiaomi poco x7 pro"], ajuste: 8, dpi: [450, 1000], botao: [25, 60] },
+      { nome: "POCO M6 Pro", aliases: ["poco m6 pro", "xiaomi poco m6 pro"], ajuste: 3, dpi: [450, 950], botao: [30, 65] },
+      { nome: "POCO F6", aliases: ["poco f6", "xiaomi poco f6"], ajuste: 7, dpi: [450, 1000], botao: [25, 60] },
+
+      { nome: "Motorola Moto G24", aliases: ["motorola moto g24", "moto g24", "motorola g24"], ajuste: -2, dpi: [450, 850], botao: [35, 65] },
+      { nome: "Motorola Moto G34", aliases: ["motorola moto g34", "moto g34", "motorola g34"], ajuste: 0, dpi: [450, 900], botao: [35, 65] },
+      { nome: "Motorola Moto G54", aliases: ["motorola moto g54", "moto g54", "motorola g54"], ajuste: 2, dpi: [450, 900], botao: [30, 65] },
+      { nome: "Motorola Moto G84", aliases: ["motorola moto g84", "moto g84", "motorola g84"], ajuste: 3, dpi: [450, 950], botao: [30, 65] },
+      { nome: "Motorola Moto G85", aliases: ["motorola moto g85", "moto g85","motorola g85"], ajuste: 4, dpi: [450, 950], botao: [30, 65] },
+      { nome: "Motorola Moto G Power", aliases: ["motorola moto g power", "moto g power"], ajuste: 1, dpi: [450, 900], botao: [30, 65] },
+      { nome: "Motorola Edge 40", aliases: ["motorola edge 40", "edge 40"], ajuste: 5, dpi: [450, 1000], botao: [25, 60] },
+      { nome: "Motorola Edge 50 Pro", aliases: ["motorola edge 50 pro", "edge 50 pro"], ajuste: 7, dpi: [450, 1000], botao: [25, 60] },
+
+      { nome: "LG K41S", aliases: ["lg k41s"], ajuste: -4, dpi: [400, 800], botao: [40, 70] },
+      { nome: "LG K52", aliases: ["lg k52"], ajuste: -3, dpi: [400, 800], botao: [40, 70] },
+      { nome: "LG K62", aliases: ["lg k62"], ajuste: -2, dpi: [400, 850], botao: [35, 70] },
+      { nome: "LG K10", aliases: ["lg k10"], ajuste: -5, dpi: [400, 800], botao: [40, 70] },
+      { nome: "Samsung Galaxy J7", aliases: ["samsung galaxy j7", "samsung j7", "galaxy j7"], ajuste: -5, dpi: [400, 800], botao: [40, 70] },
+      { nome: "Samsung Galaxy J7 Prime", aliases: ["samsung galaxy j7 prime", "galaxy j7 prime"], ajuste: -4, dpi: [400, 800], botao: [40, 70] }
+    ];
+
+    const etapa1 = document.getElementById("etapa1");
+    const etapa2 = document.getElementById("etapa2");
+    const etapa3 = document.getElementById("etapa3");
+    const etapaGerar = document.getElementById("etapaGerar");
+    const resultado = document.getElementById("resultado");
+
+    const versaoJogo = document.getElementById("versaoJogo");
+    const modeloInput = document.getElementById("modelo");
+    const estilo = document.getElementById("estilo");
+    const tipoSensi = document.getElementById("tipoSensi");
+    const erroModelo = document.getElementById("erroModelo");
+
+    const datalist = document.getElementById("modelosDisponiveis");
+
+    modelos.forEach(aparelho => {
+      const option = document.createElement("option");
+      option.value = aparelho.nome;
+      datalist.appendChild(option);
+    });
+
+    function normalizar(texto) {
+      return texto
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "");
+    }
+
+    function encontrarModelo(texto) {
+      const digitado = normalizar(texto);
+
+      return modelos.find(aparelho =>
+        aparelho.aliases.some(alias => normalizar(alias) === digitado)
+      );
+    }
+
+    document.getElementById("confirmar1").addEventListener("click", () => {
+      if (!versaoJogo.value) {
+        alert("Escolha a versão do Free Fire.");
+        versaoJogo.focus();
+        return;
+      }
+
+      if (!encontrarModelo(modeloInput.value)) {
+        erroModelo.textContent =
+          "Não reconheci esse modelo. Escolha um aparelho da lista.";
+        modeloInput.focus();
+        return;
+      }
+
+      erroModelo.textContent = "";
+      etapa1.hidden = true;
+      etapa2.hidden = false;
+    });
+
+    modeloInput.addEventListener("input", () => {
+      erroModelo.textContent = "";
+    });
+
+    document.getElementById("confirmar2").addEventListener("click", () => {
+      if (!estilo.value) {
+        alert("Escolha seu estilo de toque.");
+        estilo.focus();
+        return;
+      }
+
+      etapa2.hidden = true;
+      etapa3.hidden = false;
+    });
+
+    document.getElementById("confirmar3").addEventListener("click", () => {
+      if (!tipoSensi.value) {
+        alert("Escolha o nível de sensibilidade.");
+        tipoSensi.focus();
+        return;
+      }
+
+      etapa3.hidden = true;
+      etapaGerar.hidden = false;
+    });
+
+    function limitar(valor) {
+      return Math.max(0, Math.min(200, Math.round(valor)));
+    }
+
+    function aleatorio(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    document.getElementById("gerarBtn").addEventListener("click", () => {
+      const aparelho = encontrarModelo(modeloInput.value);
+
+      if (!aparelho) {
+        etapaGerar.hidden = true;
+        etapa1.hidden = false;
+        erroModelo.textContent =
+          "Não reconheci esse modelo. Escolha um aparelho da lista.";
+        return;
+      }
+
+      const ajusteNivel = {
+        baixa: -10,
+        normal: 0,
+        alta: 10
+      };
+
+      const ajusteEstilo = {
+        suave: -5,
+        equilibrado: 0,
+        rapido: 5
+      };
+
+      const ajusteVersao = versaoJogo.value === "max" ? 0.05 : 0;
+      const ajusteFixo =
+        ajusteNivel[tipoSensi.value] +
+        ajusteEstilo[estilo.value] +
+        aparelho.ajuste;
+
+      const bases = {
+        geral: 160,
+        red: 150,
+        mira2x: 140,
+        mira4x: 130,
+        awm: 80,
+        olhadinha: 140
+      };
+
+      function valorFinal(base) {
+        return limitar((base + ajusteFixo) * (1 + ajusteVersao));
+      }
+
+      const dpi = aleatorio(aparelho.dpi[0], aparelho.dpi[1]);
+      const botao = aleatorio(aparelho.botao[0], aparelho.botao[1]);
+
+      document.getElementById("resultadoModelo").textContent = aparelho.nome;
+      document.getElementById("resultadoEstilo").textContent =
+        estilo.options[estilo.selectedIndex].text;
+      document.getElementById("resultadoNivel").textContent =
+        tipoSensi.options[tipoSensi.selectedIndex].text;
+      document.getElementById("resultadoDPI").textContent = dpi;
+      document.getElementById("resultadoBotao").textContent = botao + "%";
+      document.getElementById("badgeVersao").textContent =
+        versaoJogo.value === "max" ? "FREE FIRE MAX" : "FREE FIRE";
+
+      document.getElementById("sensiGeral").textContent = valorFinal(bases.geral);
+      document.getElementById("sensiRedDot").textContent = valorFinal(bases.red);
+      document.getElementById("sensi2x").textContent = valorFinal(bases.mira2x);
+      document.getElementById("sensi4x").textContent = valorFinal(bases.mira4x);
+      document.getElementById("sensiAWM").textContent = valorFinal(bases.awm);
+      document.getElementById("sensiOlhadinha").textContent = valorFinal(bases.olhadinha);
+
+      resultado.dataset.dpi = dpi;
+      resultado.dataset.botao = botao;
+      resultado.dataset.versao =
+        versaoJogo.value === "max" ? "Free Fire MAX" : "Free Fire";
+      resultado.dataset.modelo = aparelho.nome;
+
+      etapaGerar.hidden = true;
+      resultado.hidden = false;
+      resultado.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    document.getElementById("copiarBtn").addEventListener("click", async () => {
+      const texto = [
+        "SW Thur Sensibilidades",
+        "Versão: " + resultado.dataset.versao,
+        "Modelo: " + resultado.dataset.modelo,
+        "Estilo: " + document.getElementById("resultadoEstilo").textContent,
+        "Nível: " + document.getElementById("resultadoNivel").textContent,
+        "DPI sugerida: " + resultado.dataset.dpi,
+        "Botão de tiro: " + resultado.dataset.botao + "%",
+        "Geral: " + document.getElementById("sensiGeral").textContent,
+        "Ponto vermelho: " + document.getElementById("sensiRedDot").textContent,
+        "2x: " + document.getElementById("sensi2x").textContent,
+        "4x: " + document.getElementById("sensi4x").textContent,
+        "AWM: " + document.getElementById("sensiAWM").textContent,
+        "Olhadinha: " + document.getElementById("sensiOlhadinha").textContent
+      ].join("\n");
+
+      try {
+        await navigator.clipboard.writeText(texto);
+        alert("Configuração copiada!");
+      } catch {
+        window.prompt("Copie sua configuração:", texto);
+      }
+    });
+
+    document.getElementById("reiniciarBtn").addEventListener("click", () => {
+      versaoJogo.value = "";
+      modeloInput.value = "";
+      estilo.value = "";
+      tipoSensi.value = "";
+      erroModelo.textContent = "";
+
+      resultado.hidden = true;
+      etapa2.hidden = true;
+      etapa3.hidden = true;
+      etapaGerar.hidden = true;
+      etapa1.hidden = false;
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  </script>
+</body>
+</html>
