@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+
+  <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -9,8 +10,8 @@
   <style>
     :root {
       --bg: #090b12;
-      --card: rgba(19, 23, 36, .94);
-      --line: rgba(151, 126, 255, .22);
+      --card: #131724;
+      --line: rgba(151, 126, 255, .25);
       --cyan: #4de8e2;
       --text: #f4f2ff;
       --muted: #a6a8ba;
@@ -50,7 +51,6 @@
       color: var(--cyan);
       font-weight: 900;
       background: linear-gradient(145deg,#1d2340,#10131e);
-      box-shadow: 0 0 24px rgba(77,232,226,.14);
     }
 
     .eyebrow {
@@ -63,7 +63,7 @@
 
     h1 {
       margin: 0;
-      font-size: clamp(23px,7vw,32px);
+      font-size: clamp(23px, 7vw, 32px);
       line-height: 1.1;
     }
 
@@ -79,7 +79,12 @@
     }
 
     .section-title { margin: 0 0 3px; font-size: 18px; }
-    .section-hint { margin: 0 0 15px; color: var(--muted); font-size: 13px; }
+
+    .section-hint {
+      margin: 0 0 15px;
+      color: var(--muted);
+      font-size: 13px;
+    }
 
     label {
       display: block;
@@ -112,8 +117,7 @@
       font-weight: 900;
       letter-spacing: .5px;
       cursor: pointer;
-      background: linear-gradient(100deg,var(--cyan),#9b8aff 85%);
-      box-shadow: 0 8px 25px rgba(111,111,255,.25);
+      background: linear-gradient(100deg, var(--cyan), #9b8aff 85%);
     }
 
     button:hover { filter: brightness(1.08); }
@@ -126,7 +130,6 @@
       box-shadow: none;
     }
 
-    /* O !important impede que estilos sobrescrevam o atributo hidden. */
     .step[hidden], .result[hidden] { display: none !important; }
 
     .step-indicator {
@@ -136,21 +139,6 @@
       letter-spacing: 1px;
     }
 
-    .links-ajuda {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px 16px;
-      margin-top: 12px;
-    }
-
-    .links-ajuda a {
-      color: var(--cyan);
-      font-size: 12px;
-      text-decoration: none;
-    }
-
-    .links-ajuda a:hover { text-decoration: underline; }
-
     .result-heading {
       display: flex;
       justify-content: space-between;
@@ -158,11 +146,7 @@
       margin-bottom: 14px;
     }
 
-    .result-heading h2 {
-      margin: 0;
-      font-size: 20px;
-      overflow-wrap: anywhere;
-    }
+    .result-heading h2 { margin: 0; font-size: 20px; }
 
     .badge {
       flex: 0 0 auto;
@@ -223,14 +207,13 @@
     </header>
 
     <p class="intro">
-      Monte uma configuração inicial e ajuste no treino até encontrar o toque que combina com você.
+      Gere uma configuração inicial e ajuste no treino até encontrar o toque ideal.
     </p>
 
     <section class="card">
       <h2 class="section-title">Personalize sua configuração</h2>
       <p class="section-hint">Responda uma etapa por vez.</p>
 
-      <!-- Etapa 1 -->
       <div id="etapa1" class="step">
         <p class="step-indicator">ETAPA 1 DE 3</p>
 
@@ -244,29 +227,9 @@
         <label for="modelo">Modelo do celular</label>
         <input id="modelo" type="text" placeholder="Ex.: Samsung Galaxy A07" autocomplete="off">
 
-        <label for="dpi">DPI do celular</label>
-        <input
-          id="dpi"
-          type="number"
-          inputmode="numeric"
-          placeholder="Ex.: 600"
-          min="1"
-          max="2000"
-        >
-
-        <div class="links-ajuda">
-          <a href="mailto:arthurlopes08122012@gmail.com?subject=Modelo%20n%C3%A3o%20encontrado">
-            Não encontrou o modelo? Reporte aqui
-          </a>
-          <a href="mailto:arthurlopes08122012@gmail.com?subject=Erro%20ou%20bug%20no%20gerador">
-            Achou um erro ou bug? Reporte aqui
-          </a>
-        </div>
-
         <button id="confirmar1" type="button">CONFIRMAR E CONTINUAR</button>
       </div>
 
-      <!-- Etapa 2 -->
       <div id="etapa2" class="step" hidden>
         <p class="step-indicator">ETAPA 2 DE 3</p>
 
@@ -281,11 +244,10 @@
         <button id="confirmar2" type="button">CONFIRMAR E CONTINUAR</button>
       </div>
 
-      <!-- Etapa 3 -->
       <div id="etapa3" class="step" hidden>
         <p class="step-indicator">ETAPA 3 DE 3</p>
 
-        <label for="tipoSensi">Sensibilidade que prefere</label>
+        <label for="tipoSensi">Nível de sensibilidade</label>
         <select id="tipoSensi">
           <option value="">Escolha uma opção</option>
           <option value="baixa">Baixa</option>
@@ -296,7 +258,6 @@
         <button id="confirmar3" type="button">CONFIRMAR</button>
       </div>
 
-      <!-- Gerar -->
       <div id="etapaGerar" class="step" hidden>
         <p class="section-hint">Tudo pronto. Gere sua configuração.</p>
         <button id="gerarBtn" type="button">✦ GERAR MINHA SENSI</button>
@@ -315,16 +276,20 @@
           <strong id="resultadoModelo">—</strong>
         </div>
         <div class="stat">
-          <span>DPI</span>
-          <strong id="resultadoDPI">—</strong>
-        </div>
-        <div class="stat">
           <span>Estilo de toque</span>
           <strong id="resultadoEstilo">—</strong>
         </div>
         <div class="stat">
-          <span>Preferência</span>
-          <strong id="resultadoPreferencia">—</strong>
+          <span>Nível escolhido</span>
+          <strong id="resultadoNivel">—</strong>
+        </div>
+        <div class="stat">
+          <span>DPI sugerida</span>
+          <strong id="resultadoDPI">—</strong>
+        </div>
+        <div class="stat">
+          <span>Tamanho do botão de tiro</span>
+          <strong id="resultadoBotao">—</strong>
         </div>
 
         <div class="recommendations">
@@ -337,7 +302,8 @@
         </div>
 
         <p class="note">
-          Esta configuração é um ponto de partida. Teste no modo treino e ajuste aos poucos.
+          DPI e tamanho do botão são sugestões dentro das faixas escolhidas.
+          Ajuste no treino conforme seu celular e seu jeito de jogar.
         </p>
 
         <button id="copiarBtn" class="secondary" type="button">COPIAR CONFIGURAÇÃO</button>
@@ -357,33 +323,22 @@
 
     const versaoJogo = document.getElementById("versaoJogo");
     const modelo = document.getElementById("modelo");
-    const dpi = document.getElementById("dpi");
     const estilo = document.getElementById("estilo");
     const tipoSensi = document.getElementById("tipoSensi");
 
     document.getElementById("confirmar1").addEventListener("click", () => {
       if (!versaoJogo.value) {
-        alert("Escolha Free Fire normal ou Free Fire MAX.");
+        alert("Escolha a versão do Free Fire.");
         versaoJogo.focus();
         return;
       }
-
       if (!modelo.value.trim()) {
         alert("Digite o modelo do seu celular.");
         modelo.focus();
         return;
       }
-
-      const valorDPI = Number(dpi.value);
-      if (!valorDPI || valorDPI < 1 || valorDPI > 2000) {
-        alert("Digite uma DPI válida, entre 1 e 2000.");
-        dpi.focus();
-        return;
-      }
-
       etapa1.hidden = true;
       etapa2.hidden = false;
-      estilo.focus();
     });
 
     document.getElementById("confirmar2").addEventListener("click", () => {
@@ -392,80 +347,79 @@
         estilo.focus();
         return;
       }
-
       etapa2.hidden = true;
       etapa3.hidden = false;
-      tipoSensi.focus();
     });
 
     document.getElementById("confirmar3").addEventListener("click", () => {
       if (!tipoSensi.value) {
-        alert("Escolha sua preferência de sensibilidade.");
+        alert("Escolha o nível de sensibilidade.");
         tipoSensi.focus();
         return;
       }
-
       etapa3.hidden = true;
       etapaGerar.hidden = false;
     });
+
+    function aleatorio(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
 
     function limitar(valor) {
       return Math.max(0, Math.min(200, valor));
     }
 
     document.getElementById("gerarBtn").addEventListener("click", () => {
-      const ajustesEstilo = {
-        suave:       { geral: -12, red: -10, mira2x: -8, mira4x: -10, awm: -8, olhadinha: -5 },
-        equilibrado: { geral: 0,   red: 0,   mira2x: 0,  mira4x: 0,   awm: 0,  olhadinha: 0 },
-        rapido:      { geral: 10,  red: 8,   mira2x: 7,  mira4x: 5,   awm: 4,  olhadinha: 8 }
+      const faixas = {
+        baixa: { dpi: [470, 650], botao: [60, 100], ajuste: -10 },
+        normal: { dpi: [650, 750], botao: [40, 60], ajuste: 0 },
+        alta: { dpi: [750, 1000], botao: [20, 47], ajuste: 10 }
       };
 
-      const ajustesPreferencia = { baixa: -10, normal: 0, alta: 10 };
+      const ajusteEstilo = { suave: -5, equilibrado: 0, rapido: 5 };
+      const faixa = faixas[tipoSensi.value];
+      const dpiGerada = aleatorio(faixa.dpi[0], faixa.dpi[1]);
+      const botaoGerado = aleatorio(faixa.botao[0], faixa.botao[1]);
+      const extra = ajusteEstilo[estilo.value];
 
-      const base = {
-        geral: 160,
-        red: 150,
-        mira2x: 140,
-        mira4x: 130,
-        awm: 80,
-        olhadinha: 140
+      const bases = {
+        geral: 160, red: 150, mira2x: 140,
+        mira4x: 130, awm: 80, olhadinha: 140
       };
-
-      const ajuste = ajustesEstilo[estilo.value];
-      const preferencia = ajustesPreferencia[tipoSensi.value];
 
       document.getElementById("sensiGeral").textContent =
-        limitar(base.geral + ajuste.geral + preferencia);
+        limitar(bases.geral + faixa.ajuste + extra);
       document.getElementById("sensiRedDot").textContent =
-        limitar(base.red + ajuste.red + preferencia);
+        limitar(bases.red + faixa.ajuste + extra);
       document.getElementById("sensi2x").textContent =
-        limitar(base.mira2x + ajuste.mira2x + preferencia);
+        limitar(bases.mira2x + faixa.ajuste + extra);
       document.getElementById("sensi4x").textContent =
-        limitar(base.mira4x + ajuste.mira4x + preferencia);
+        limitar(bases.mira4x + faixa.ajuste + extra);
       document.getElementById("sensiAWM").textContent =
-        limitar(base.awm + ajuste.awm + Math.round(preferencia / 2));
+        limitar(bases.awm + Math.round(faixa.ajuste / 2) + extra);
       document.getElementById("sensiOlhadinha").textContent =
-        limitar(base.olhadinha + ajuste.olhadinha + preferencia);
+        limitar(bases.olhadinha + faixa.ajuste + extra);
 
       const nomesEstilo = {
         suave: "Suave e controlado",
         equilibrado: "Equilibrado",
         rapido: "Rápido e leve"
       };
-
-      const nomesPreferencia = {
+      const nomesNivel = {
         baixa: "Baixa",
         normal: "Equilibrada",
         alta: "Alta"
       };
 
       document.getElementById("resultadoModelo").textContent = modelo.value.trim();
-      document.getElementById("resultadoDPI").textContent = dpi.value;
       document.getElementById("resultadoEstilo").textContent = nomesEstilo[estilo.value];
-      document.getElementById("resultadoPreferencia").textContent =
-        nomesPreferencia[tipoSensi.value];
+      document.getElementById("resultadoNivel").textContent = nomesNivel[tipoSensi.value];
+      document.getElementById("resultadoDPI").textContent = dpiGerada;
+      document.getElementById("resultadoBotao").textContent = botaoGerado + "%";
       document.getElementById("badgeVersao").textContent = versaoJogo.value.toUpperCase();
 
+      resultado.dataset.dpi = dpiGerada;
+      resultado.dataset.botao = botaoGerado;
       etapaGerar.hidden = true;
       resultado.hidden = false;
       resultado.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -476,9 +430,10 @@
         "SW Thur Sensibilidades",
         "Versão: " + versaoJogo.value,
         "Modelo: " + modelo.value.trim(),
-        "DPI: " + dpi.value,
-        "Estilo de toque: " + document.getElementById("resultadoEstilo").textContent,
-        "Preferência: " + document.getElementById("resultadoPreferencia").textContent,
+        "Estilo: " + document.getElementById("resultadoEstilo").textContent,
+        "Nível: " + document.getElementById("resultadoNivel").textContent,
+        "DPI sugerida: " + resultado.dataset.dpi,
+        "Tamanho do botão de tiro: " + resultado.dataset.botao + "%",
         "Geral: " + document.getElementById("sensiGeral").textContent,
         "Ponto vermelho: " + document.getElementById("sensiRedDot").textContent,
         "2x: " + document.getElementById("sensi2x").textContent,
@@ -498,7 +453,6 @@
     document.getElementById("reiniciarBtn").addEventListener("click", () => {
       versaoJogo.value = "";
       modelo.value = "";
-      dpi.value = "";
       estilo.value = "";
       tipoSensi.value = "";
 
@@ -507,7 +461,6 @@
       etapa3.hidden = true;
       etapaGerar.hidden = true;
       etapa1.hidden = false;
-
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
   </script>
