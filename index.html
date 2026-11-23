@@ -355,6 +355,22 @@
       { nome: "Motorola Moto G56", aliases: ["motorola moto g56", "moto g56", "motorola g56"], ajuste: 1, dpi: [450, 900], botao: [30, 65] },
       { nome: "Motorola Moto G15", aliases: ["motorola moto g15", "moto g15", "motorola g15"], sensi: { geral: [165, 180], red: [155, 170], mira2x: [145, 160], mira4x: [130, 145], awm: [75, 90], olhadinha: [135, 150] }, dpi: [450, 850], botao: [35, 65] }
     ];
+// Adiciona uma faixa de sensi a cada modelo que ainda não tem uma.
+// A faixa especial já cadastrada no Moto G15 é preservada.
+modelos.forEach(aparelho => {
+  if (!aparelho.sensi) {
+    const ajuste = aparelho.ajuste || 0;
+
+    aparelho.sensi = {
+      geral: [150 + ajuste, 170 + ajuste],
+      red: [140 + ajuste, 160 + ajuste],
+      mira2x: [130 + ajuste, 150 + ajuste],
+      mira4x: [120 + ajuste, 140 + ajuste],
+      awm: [70 + ajuste, 90 + ajuste],
+      olhadinha: [130 + ajuste, 150 + ajuste]
+    };
+  }
+});
     const etapa1 = document.getElementById("etapa1");
     const etapa2 = document.getElementById("etapa2");
     const etapa3 = document.getElementById("etapa3");
