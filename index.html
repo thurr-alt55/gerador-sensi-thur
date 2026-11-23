@@ -473,55 +473,54 @@ modelos.forEach(aparelho => {
       }
 
       const ajusteNivel = {
-        baixa: -10,
-        normal: 0,
-        alta: 10
-      };
+  baixa: -10,
+  normal: 0,
+  alta: 10
+};
 
-      const ajusteEstilo = {
-        suave: -5,
-        equilibrado: 0,
-        rapido: 5
-      };
+const ajusteEstilo = {
+  suave: -5,
+  equilibrado: 0,
+  rapido: 5
+};
 
-      const ajusteVersao = versaoJogo.value === "max" ? 0.05 : 0;
-      const ajusteFixo =
-        ajusteNivel[tipoSensi.value] +
-        ajusteEstilo[estilo.value] +
-        aparelho.ajuste;
+const ajusteVersao = versaoJogo.value === "max" ? 0.05 : 0;
 
-      const bases = {
-        geral: 160,
-        red: 150,
-        mira2x: 140,
-        mira4x: 130,
-        awm: 80,
-        olhadinha: 140
-      };
+function valorFinal(faixa) {
+  const valor = aleatorio(faixa[0], faixa[1]);
+  return limitar(
+    (valor + ajusteNivel[tipoSensi.value] + ajusteEstilo[estilo.value]) *
+    (1 + ajusteVersao)
+  );
+}
 
-      function valorFinal(base) {
-        return limitar((base + ajusteFixo) * (1 + ajusteVersao));
-      }
+const dpi = aleatorio(aparelho.dpi[0], aparelho.dpi[1]);
+const botao = aleatorio(aparelho.botao[0], aparelho.botao[1]);
 
-      const dpi = aleatorio(aparelho.dpi[0], aparelho.dpi[1]);
-      const botao = aleatorio(aparelho.botao[0], aparelho.botao[1]);
+document.getElementById("resultadoModelo").textContent = aparelho.nome;
+document.getElementById("resultadoEstilo").textContent =
+  estilo.options[estilo.selectedIndex].text;
+document.getElementById("resultadoNivel").textContent =
+  tipoSensi.options[tipoSensi.selectedIndex].text;
+document.getElementById("resultadoDPI").textContent = dpi;
+document.getElementById("resultadoBotao").textContent = botao + "%";
+document.getElementById("badgeVersao").textContent =
+  versaoJogo.value === "max" ? "FREE FIRE MAX" : "FREE FIRE";
 
-      document.getElementById("resultadoModelo").textContent = aparelho.nome;
-      document.getElementById("resultadoEstilo").textContent =
-        estilo.options[estilo.selectedIndex].text;
-      document.getElementById("resultadoNivel").textContent =
-        tipoSensi.options[tipoSensi.selectedIndex].text;
-      document.getElementById("resultadoDPI").textContent = dpi;
-      document.getElementById("resultadoBotao").textContent = botao + "%";
-      document.getElementById("badgeVersao").textContent =
-        versaoJogo.value === "max" ? "FREE FIRE MAX" : "FREE FIRE";
+document.getElementById("sensiGeral").textContent =
+  valorFinal(aparelho.sensi.geral);
+document.getElementById("sensiRedDot").textContent =
+  valorFinal(aparelho.sensi.red);
+document.getElementById("sensi2x").textContent =
+  valorFinal(aparelho.sensi.mira2x);
+document.getElementById("sensi4x").textContent =
+  valorFinal(aparelho.sensi.mira4x);
+document.getElementById("sensiAWM").textContent =
+  valorFinal(aparelho.sensi.awm);
+document.getElementById("sensiOlhadinha").textContent =
+  valorFinal(aparelho.sensi.olhadinha);
 
-      document.getElementById("sensiGeral").textContent = valorFinal(bases.geral);
-      document.getElementById("sensiRedDot").textContent = valorFinal(bases.red);
-      document.getElementById("sensi2x").textContent = valorFinal(bases.mira2x);
-      document.getElementById("sensi4x").textContent = valorFinal(bases.mira4x);
-      document.getElementById("sensiAWM").textContent = valorFinal(bases.awm);
-      document.getElementById("sensiOlhadinha").textContent = valorFinal(bases.olhadinha);
+      function  valorFinal(bases.olhadinha);
 
       resultado.dataset.dpi = dpi;
       resultado.dataset.botao = botao;
